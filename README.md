@@ -7,7 +7,7 @@
 ### 2) 프로젝트 받기
 ```bash
 git clone <레포지토리_URL>
-cd Discpedia
+
 
 3) 의존성 설치
 npm install
