@@ -10,15 +10,20 @@ import SearchPage from "./pages/SearchPage";
 import CollectionPage from "./pages/CollectionPage";
 import MyPage from "./pages/MyPage";
 import LoginPage from "./pages/LoginPage";
+import RecommandPage from "./pages/RecommandPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to="/home" />,
+    element: <Navigate to="/login" replace />,
   },
   {
     path: "/login",
     element: <LoginPage />,
+  },
+  {
+    path: "/recommand",
+    element: <RecommandPage />,
   },
   {
     element: <BackgroundPage />,
