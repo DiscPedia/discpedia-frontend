@@ -11,6 +11,7 @@ import CollectionPage from "./pages/CollectionPage";
 import MyPage from "./pages/MyPage";
 import LoginPage from "./pages/LoginPage";
 import RecommandPage from "./pages/RecommandPage";
+import Login from "./components/common/Login";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
+  },
+  {
+    path: "/login/oauth2/code/kakao",
+    element: <Login />,
   },
   {
     path: "/recommand",
