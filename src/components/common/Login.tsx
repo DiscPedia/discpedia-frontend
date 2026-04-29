@@ -7,12 +7,15 @@ const Login = () => {
     return params.get(name);
   };
 
-  const token = getUrlParameters("token");
+  const token =
+    getUrlParameters("token") ||
+    getUrlParameters("accessToken") ||
+    getUrlParameters("jwt");
 
   if (token) {
     localStorage.setItem("accessToken", token);
 
-    return <Navigate to="/home" replace />;
+    return <Navigate to="/recommand" replace />;
   } else {
     return <Navigate to="/login" replace />;
   }

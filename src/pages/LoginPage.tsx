@@ -2,6 +2,7 @@ import React from "react";
 import displayIcon from "../assets/display.svg";
 import kakaoIcon from "../assets/kakaoBanner.svg";
 import googleIcon from "../assets/googleBanner.svg";
+import { login } from "../apis/auth/ApiService";
 
 const LoginPage = () => {
   return (
@@ -22,6 +23,7 @@ const LoginPage = () => {
       <section className="w-full max-w-[360px] space-y-3 pb-6">
         <button
           type="button"
+          onClick={login}
           className="flex h-[48px] w-full items-center justify-center gap-4 rounded-[12px] bg-[#FEE500]"
         >
           <img
