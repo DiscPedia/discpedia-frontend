@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-
+//acesstoken을 받으면 recommand page로 이동
 const Login = () => {
   const getUrlParameters = (name: string) => {
     const search = window.location.search;
