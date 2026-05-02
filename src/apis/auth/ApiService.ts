@@ -41,11 +41,11 @@ export async function call(api: string, method: string, request?: unknown) {
   }
 }
 
-export function login() {
+export function login(domain: string) {
   const frontendUrl = window.location.origin;
-  const redirectUri = `${frontendUrl}/login/oauth2/code/kakao`;
+  const redirectUri = `${frontendUrl}/login/oauth2/code/${domain}`;
 
   window.location.href =
-    `${API_BASE_URL}/oauth2/authorization/kakao` +
+    `${API_BASE_URL}/oauth2/authorization/${domain}` +
     `?redirect_uri=${encodeURIComponent(redirectUri)}`;
 }

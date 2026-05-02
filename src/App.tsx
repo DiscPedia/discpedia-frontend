@@ -27,6 +27,10 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
+    path: "/login/oauth2/code/google",
+    element: <Login />,
+  },
+  {
     path: "/recommand",
     element: <RecommandPage />,
   },

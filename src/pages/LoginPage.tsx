@@ -23,7 +23,7 @@ const LoginPage = () => {
       <section className="w-full max-w-[360px] space-y-3 pb-6">
         <button
           type="button"
-          onClick={login}
+          onClick={() => login("kakao")}
           className="flex h-[48px] w-full items-center justify-center gap-4 rounded-[12px] bg-[#FEE500]"
         >
           <img
@@ -35,6 +35,7 @@ const LoginPage = () => {
         </button>
         <button
           type="button"
+          onClick={() => login("google")}
           className="flex h-[48px] w-full items-center justify-center gap-4 rounded-[12px] bg-white border border-[#E6E6E6]"
         >
           <img
