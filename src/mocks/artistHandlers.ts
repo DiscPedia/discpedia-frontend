@@ -16,7 +16,7 @@ const artists = [
 ];
 
 export const handlers = [
-  http.get("/api/artists", () => {
+  http.get("*/api/artists", () => {
     return HttpResponse.json({ artists });
   }),
 ];

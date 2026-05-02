@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import searchIcon from "../assets/search.svg";
-import { getArtists, type Artist } from "../apis/artist";
+import { getArtists, type Artist } from "../apis/recommand/artist";
 
 const RecommandPage = () => {
   const navigate = useNavigate();
