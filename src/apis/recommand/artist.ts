@@ -1,4 +1,4 @@
-import axios from "axios";
+import { call } from "../auth/ApiService";
 
 export type Artist = {
   id: number;
@@ -8,6 +8,6 @@ export type Artist = {
 };
 
 export const getArtists = async (): Promise<Artist[]> => {
-  const { data } = await axios.get<{ artists: Artist[] }>("/api/artists");
+  const data = (await call("/api/artists", "GET")) as { artists: Artist[] };
   return data.artists;
-};//일단 msw로 구현
+};
