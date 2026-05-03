@@ -6,7 +6,7 @@ import trashIcon from "../assets/trashCan.svg";
 import writeIcon from "../assets/write.svg";
 
 import { getMyReview, type MyReviewMockItem } from "../apis/mypage/myreview";
-import StarRow from "../components/common/StarRow";
+import { StarRow } from "../components/common/StarRow";
 
 const MyReviewPage = () => {
   const [items, setItems] = useState<MyReviewMockItem[]>([]);
