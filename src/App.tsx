@@ -12,6 +12,8 @@ import MyPage from "./pages/MyPage";
 import LoginPage from "./pages/LoginPage";
 import RecommandPage from "./pages/RecommandPage";
 import Login from "./components/common/Login";
+import MyReviewPage from "./pages/MyReviewPage";
+import PortfolioPage from "./pages/PortfolioPage";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +35,14 @@ const router = createBrowserRouter([
   {
     path: "/recommand",
     element: <RecommandPage />,
+  },
+  {
+    path: "/myReview",
+    element: <MyReviewPage />,
+  },
+  {
+    path: "/portfolio",
+    element: <PortfolioPage />,
   },
   {
     element: <BackgroundPage />,

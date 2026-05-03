@@ -4,6 +4,8 @@ import collectionIcon from "../assets/collection.svg";
 import likeIcon from "../assets/like.svg";
 import reviewIcon from "../assets/review.svg";
 import rightChevronIcon from "../assets/rightChev.svg";
+import { useNavigate } from "react-router-dom";
+
 import {
   getMe,
   getMyPageStats,
@@ -16,6 +18,8 @@ const MyPage = () => {
   const [stats, setStats] = useState<MyPageStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     let cancelled = false;
@@ -114,16 +118,14 @@ const MyPage = () => {
       </div>
       {/* 메뉴 */}
       <nav className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm shadow-gray-200/50">
-        {["내 리뷰 모아보기", "관심 아티스트 관리", "포트폴리오 변동 내역"].map(
-          (title, i, arr) => (
+        {[{title: "내 리뷰 모아보기", path: "/myReview"}, {title: "관심 아티스트 관리", path: "/recommand"}, {title: "포트폴리오 변동 내역", path: "/portfolio"}].map(
+          (item) => (
             <button
-              key={title}
+              key={item.title}
+              onClick={() => navigate(item.path)}
               type="button"
-              className={`flex w-full items-center justify-between px-4 py-4 text-left text-gray-900 ${
-                i < arr.length - 1 ? "border-b border-gray-100" : ""
-              }`}
-            >
-              <span>{title}</span>
+              className="flex w-full items-center justify-between px-4 py-4 text-left text-gray-900 border-b border-gray-100">
+              <span>{item.title}</span>
               <img
                 src={rightChevronIcon}
                 alt=""

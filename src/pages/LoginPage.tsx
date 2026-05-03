@@ -1,4 +1,3 @@
-import React from "react";
 import displayIcon from "../assets/display.svg";
 import kakaoIcon from "../assets/kakaoBanner.svg";
 import googleIcon from "../assets/googleBanner.svg";
