@@ -1,0 +1,906 @@
+<!doctype html>
+<html lang="ko">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>DiscPedia API Docs</title>
+	<link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.22.0/swagger-ui.css">
+	<style>
+		body {
+			margin: 0;
+			background: #f7f8fb;
+		}
+
+		.topbar {
+			display: none;
+		}
+
+		.docs-header {
+			box-sizing: border-box;
+			padding: 24px 40px;
+			background: #111827;
+			color: #ffffff;
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+		}
+
+		.docs-header h1 {
+			margin: 0 0 8px;
+			font-size: 28px;
+			font-weight: 700;
+			letter-spacing: 0;
+		}
+
+		.docs-header p {
+			margin: 0;
+			color: #d1d5db;
+			font-size: 14px;
+			line-height: 1.5;
+		}
+
+		.docs-header code {
+			border-radius: 4px;
+			padding: 2px 6px;
+			background: rgba(255, 255, 255, 0.12);
+			color: #ffffff;
+		}
+
+		#swagger-ui {
+			max-width: 1440px;
+			margin: 0 auto;
+		}
+
+		#cdn-error {
+			display: none;
+			max-width: 960px;
+			margin: 32px auto;
+			padding: 20px;
+			border: 1px solid #f59e0b;
+			border-radius: 8px;
+			background: #fffbeb;
+			color: #78350f;
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+		}
+	</style>
+</head>
+<body>
+	<header class="docs-header">
+		<h1>DiscPedia API Docs</h1>
+		<p>정적 HTML 공유용 Swagger UI 문서입니다. Base URL은 <code>/api/v1</code>, 인증은 JWT Bearer access token과 HttpOnly refresh cookie rotation을 기준으로 합니다.</p>
+	</header>
+	<div id="cdn-error">
+		Swagger UI CDN을 불러오지 못했습니다. 인터넷 연결이 가능한 환경에서 열거나, Swagger UI CSS/JS를 HTML에 번들링한 오프라인 버전으로 다시 생성하세요.
+	</div>
+	<div id="swagger-ui"></div>
+
+	<script src="https://unpkg.com/swagger-ui-dist@5.22.0/swagger-ui-bundle.js"></script>
+	<script src="https://unpkg.com/swagger-ui-dist@5.22.0/swagger-ui-standalone-preset.js"></script>
+	<script>
+		const apiResponse = (schema) => ({
+			type: "object",
+			required: ["success", "message", "data", "timestamp"],
+			properties: {
+				success: { type: "boolean", example: true },
+				message: { type: "string", example: "OK" },
+				data: schema,
+				timestamp: { type: "string", format: "date-time", example: "2026-05-03T12:00:00Z" }
+			}
+		});
+
+		const pageOf = (itemSchema) => ({
+			type: "object",
+			required: ["items", "page", "size", "totalItems", "totalPages", "hasNext"],
+			properties: {
+				items: { type: "array", items: itemSchema },
+				page: { type: "integer", example: 0 },
+				size: { type: "integer", example: 20 },
+				totalItems: { type: "integer", example: 120 },
+				totalPages: { type: "integer", example: 6 },
+				hasNext: { type: "boolean", example: true }
+			}
+		});
+
+		const ref = (name) => ({ $ref: `#/components/schemas/${name}` });
+		const json = (schema) => ({ "application/json": { schema } });
+		const ok = (description, schema) => ({ description, content: json(apiResponse(schema)) });
+		const emptyOk = (description, message) => ({
+			description,
+			content: json({
+				...apiResponse({ nullable: true, example: null }),
+				example: { success: true, message, data: null, timestamp: "2026-05-03T12:00:00Z" }
+			})
+		});
+		const auth = [{ bearerAuth: [] }];
+
+		const commonPageParams = [
+			{ name: "page", in: "query", schema: { type: "integer", default: 0, minimum: 0 } },
+			{ name: "size", in: "query", schema: { type: "integer", default: 20, minimum: 1 } },
+			{ name: "sort", in: "query", schema: { type: "string", example: "createdAt,desc" } }
+		];
+
+		const openApiSpec = {
+			openapi: "3.1.0",
+			info: {
+				title: "DiscPedia Client API",
+				version: "v1",
+				description: "DiscPedia 클라이언트 앱 구현을 위한 REST API 계약입니다. 기준 문서: docs/discpedia-client-api-spec.md"
+			},
+			servers: [
+				{ url: "/api/v1", description: "Application relative base URL" },
+				{ url: "http://localhost:8080/api/v1", description: "Local development" }
+			],
+			tags: [
+				{ name: "Auth" },
+				{ name: "User" },
+				{ name: "Home" },
+				{ name: "Artists" },
+				{ name: "Albums" },
+				{ name: "Reviews" },
+				{ name: "Collections" },
+				{ name: "Portfolio" },
+				{ name: "Market" },
+				{ name: "Notifications" }
+			],
+			paths: {
+				"/auth/signup": {
+					post: {
+						tags: ["Auth"],
+						summary: "자체 회원가입",
+						description: "Phase 1 MVP에서는 제공하지 않으며 501을 반환합니다.",
+						requestBody: { required: true, content: json(ref("SignupRequest")) },
+						responses: { "501": ok("Local signup is not supported in Phase 1", ref("ApiErrorResponse")) }
+					}
+				},
+				"/auth/login": {
+					post: {
+						tags: ["Auth"],
+						summary: "자체 로그인",
+						description: "Phase 1 MVP에서는 제공하지 않으며 501을 반환합니다.",
+						requestBody: { required: true, content: json(ref("LoginRequest")) },
+						responses: { "501": ok("Local login is not supported in Phase 1", ref("ApiErrorResponse")) }
+					}
+				},
+				"/auth/logout": {
+					post: {
+						tags: ["Auth"],
+						summary: "로그아웃",
+						description: "현재 refresh token을 revoke하고 refresh cookie를 삭제합니다.",
+						security: auth,
+						responses: { "200": emptyOk("Logout completed successfully", "Logout completed successfully") }
+					}
+				},
+				"/auth/oauth/{provider}/authorize": {
+					get: {
+						tags: ["Auth"],
+						summary: "OAuth 로그인 URL 발급",
+						parameters: [{ name: "provider", in: "path", required: true, schema: { type: "string", enum: ["kakao", "google"] } }],
+						responses: { "200": ok("OAuth authorization URL created", ref("OAuthAuthorizeResponse")) }
+					}
+				},
+				"/auth/oauth/{provider}/login": {
+					post: {
+						tags: ["Auth"],
+						summary: "OAuth 인가 코드 로그인",
+						parameters: [{ name: "provider", in: "path", required: true, schema: { type: "string", enum: ["kakao", "google"] } }],
+						requestBody: { required: true, content: json(ref("OAuthLoginRequest")) },
+						responses: { "200": ok("OAuth login completed successfully", ref("OAuthLoginResponse")) }
+					}
+				},
+				"/me": {
+					get: {
+						tags: ["User"],
+						summary: "내 프로필 조회",
+						security: auth,
+						responses: { "200": ok("My profile retrieved", ref("UserProfile")) }
+					},
+					patch: {
+						tags: ["User"],
+						summary: "내 프로필 수정",
+						security: auth,
+						requestBody: { required: true, content: json(ref("UpdateProfileRequest")) },
+						responses: { "200": ok("My profile updated", ref("UserProfile")) }
+					}
+				},
+				"/home": {
+					get: {
+						tags: ["Home"],
+						summary: "홈 피드 통합 조회",
+						security: auth,
+						parameters: [
+							{ name: "newReleaseLimit", in: "query", schema: { type: "integer", default: 10 } },
+							{ name: "marketLimit", in: "query", schema: { type: "integer", default: 10 } },
+							{ name: "commentLimit", in: "query", schema: { type: "integer", default: 10 } },
+							{ name: "artistNewsLimit", in: "query", schema: { type: "integer", default: 10 } }
+						],
+						responses: { "200": ok("Home feed retrieved", ref("HomeFeed")) }
+					}
+				},
+				"/artists": {
+					get: {
+						tags: ["Artists"],
+						summary: "아티스트 검색/목록",
+						security: auth,
+						parameters: [
+							{ name: "q", in: "query", schema: { type: "string", example: "잔나비" } },
+							{ name: "page", in: "query", schema: { type: "integer", default: 0 } },
+							{ name: "size", in: "query", schema: { type: "integer", default: 30 } }
+						],
+						responses: { "200": ok("Artists retrieved", pageOf(ref("ArtistSearchItem"))) }
+					}
+				},
+				"/me/favorite-artists": {
+					get: {
+						tags: ["Artists"],
+						summary: "관심 아티스트 조회",
+						security: auth,
+						responses: { "200": ok("Favorite artists retrieved", { type: "array", items: ref("FavoriteArtist") }) }
+					},
+					put: {
+						tags: ["Artists"],
+						summary: "관심 아티스트 저장",
+						security: auth,
+						requestBody: { required: true, content: json(ref("UpdateFavoriteArtistsRequest")) },
+						responses: { "200": ok("Favorite artists updated", ref("UpdateFavoriteArtistsResponse")) }
+					}
+				},
+				"/albums": {
+					get: {
+						tags: ["Albums"],
+						summary: "음반 검색/목록",
+						security: auth,
+						parameters: [
+							{ name: "q", in: "query", schema: { type: "string", example: "악뮤" } },
+							{ name: "mediaType", in: "query", schema: ref("MediaType") },
+							{ name: "genre", in: "query", schema: ref("Genre") },
+							{ name: "status", in: "query", schema: ref("AlbumStatus") },
+							{ name: "section", in: "query", schema: { type: "string", enum: ["NEW_RELEASES", "POPULAR", "RECOMMENDED"] } },
+							...commonPageParams
+						],
+						responses: { "200": ok("Albums retrieved", pageOf(ref("AlbumSummary"))) }
+					}
+				},
+				"/albums/{albumId}": {
+					get: {
+						tags: ["Albums"],
+						summary: "음반 상세 조회",
+						security: auth,
+						parameters: [{ name: "albumId", in: "path", required: true, schema: { type: "integer", example: 201 } }],
+						responses: { "200": ok("Album detail retrieved", ref("AlbumDetail")) }
+					}
+				},
+				"/albums/{albumId}/reviews": {
+					get: {
+						tags: ["Reviews"],
+						summary: "음반 리뷰 목록",
+						security: auth,
+						parameters: [
+							{ name: "albumId", in: "path", required: true, schema: { type: "integer", example: 201 } },
+							{ name: "sort", in: "query", schema: ref("ReviewSort") },
+							...commonPageParams.filter((param) => param.name !== "sort")
+						],
+						responses: { "200": ok("Reviews retrieved", pageOf(ref("Review"))) }
+					},
+					post: {
+						tags: ["Reviews"],
+						summary: "리뷰 작성",
+						security: auth,
+						parameters: [{ name: "albumId", in: "path", required: true, schema: { type: "integer", example: 201 } }],
+						requestBody: { required: true, content: json(ref("ReviewRequest")) },
+						responses: { "201": ok("Review created", ref("ReviewCreated")) }
+					}
+				},
+				"/reviews/{reviewId}": {
+					patch: {
+						tags: ["Reviews"],
+						summary: "리뷰 수정",
+						security: auth,
+						parameters: [{ name: "reviewId", in: "path", required: true, schema: { type: "integer", example: 10 } }],
+						requestBody: { required: true, content: json(ref("ReviewRequest")) },
+						responses: { "200": ok("Review updated", ref("ReviewCreated")) }
+					},
+					delete: {
+						tags: ["Reviews"],
+						summary: "리뷰 삭제",
+						security: auth,
+						parameters: [{ name: "reviewId", in: "path", required: true, schema: { type: "integer", example: 10 } }],
+						responses: { "200": emptyOk("Review deleted", "Review deleted") }
+					}
+				},
+				"/me/reviews": {
+					get: {
+						tags: ["Reviews"],
+						summary: "내 리뷰 모아보기",
+						security: auth,
+						parameters: commonPageParams.filter((param) => param.name !== "sort"),
+						responses: { "200": ok("My reviews retrieved", pageOf(ref("MyReview"))) }
+					}
+				},
+				"/collections/summary": {
+					get: {
+						tags: ["Collections"],
+						summary: "컬렉션 총 가치/통계",
+						security: auth,
+						responses: { "200": ok("Collection summary retrieved", ref("CollectionSummary")) }
+					}
+				},
+				"/collections": {
+					get: {
+						tags: ["Collections"],
+						summary: "내 컬렉션 목록",
+						security: auth,
+						parameters: [
+							{ name: "mediaType", in: "query", schema: ref("MediaType") },
+							{ name: "status", in: "query", schema: ref("CollectionStatus") },
+							{ name: "q", in: "query", schema: { type: "string", example: "리스트" } },
+							...commonPageParams
+						],
+						responses: { "200": ok("Collection items retrieved", pageOf(ref("CollectionItem"))) }
+					},
+					post: {
+						tags: ["Collections"],
+						summary: "컬렉션 등록",
+						security: auth,
+						requestBody: { required: true, content: json(ref("CollectionItemRequest")) },
+						responses: { "201": ok("Collection item created", ref("CollectionItemCreated")) }
+					}
+				},
+				"/collections/{collectionItemId}": {
+					get: {
+						tags: ["Collections"],
+						summary: "컬렉션 상세",
+						security: auth,
+						parameters: [{ name: "collectionItemId", in: "path", required: true, schema: { type: "integer", example: 1001 } }],
+						responses: { "200": ok("Collection item detail retrieved", ref("CollectionItemDetail")) }
+					},
+					patch: {
+						tags: ["Collections"],
+						summary: "컬렉션 수정",
+						security: auth,
+						parameters: [{ name: "collectionItemId", in: "path", required: true, schema: { type: "integer", example: 1001 } }],
+						requestBody: { required: true, content: json(ref("CollectionItemRequest")) },
+						responses: { "200": ok("Collection item detail retrieved", ref("CollectionItemDetail")) }
+					},
+					delete: {
+						tags: ["Collections"],
+						summary: "컬렉션 삭제",
+						security: auth,
+						parameters: [{ name: "collectionItemId", in: "path", required: true, schema: { type: "integer", example: 1001 } }],
+						responses: { "200": emptyOk("Collection item deleted", "Collection item deleted") }
+					}
+				},
+				"/portfolio/report": {
+					get: {
+						tags: ["Portfolio"],
+						summary: "포트폴리오 리포트",
+						security: auth,
+						parameters: [{ name: "months", in: "query", schema: { type: "integer", default: 7 } }],
+						responses: { "200": ok("Portfolio report retrieved", ref("PortfolioReport")) }
+					}
+				},
+				"/market/albums": {
+					get: {
+						tags: ["Market"],
+						summary: "중고 거래 음반 목록",
+						security: auth,
+						parameters: [
+							{ name: "q", in: "query", schema: { type: "string", example: "한로로" } },
+							{ name: "mediaType", in: "query", schema: ref("MediaType") },
+							{ name: "genre", in: "query", schema: ref("Genre") },
+							...commonPageParams
+						],
+						responses: { "200": ok("Market albums retrieved", pageOf(ref("MarketAlbum"))) }
+					}
+				},
+				"/market/albums/{albumId}/summary": {
+					get: {
+						tags: ["Market"],
+						summary: "중고 거래 요약",
+						security: auth,
+						parameters: [{ name: "albumId", in: "path", required: true, schema: { type: "integer", example: 301 } }],
+						responses: { "200": ok("Market summary retrieved", ref("MarketAlbumSummary")) }
+					}
+				},
+				"/notifications": {
+					get: {
+						tags: ["Notifications"],
+						summary: "알림 목록",
+						security: auth,
+						parameters: [
+							{ name: "unreadOnly", in: "query", schema: { type: "boolean", default: false } },
+							...commonPageParams.filter((param) => param.name !== "sort")
+						],
+						responses: { "200": ok("Notifications retrieved", pageOf(ref("Notification"))) }
+					}
+				},
+				"/notifications/{notificationId}/read": {
+					patch: {
+						tags: ["Notifications"],
+						summary: "알림 읽음 처리",
+						security: auth,
+						parameters: [{ name: "notificationId", in: "path", required: true, schema: { type: "integer", example: 1 } }],
+						responses: { "200": ok("Notification marked as read", ref("NotificationRead")) }
+					}
+				}
+			},
+			components: {
+				securitySchemes: {
+					bearerAuth: { type: "http", scheme: "bearer", bearerFormat: "JWT" }
+				},
+				schemas: {
+					MediaType: { type: "string", enum: ["LP", "CD", "ETC"] },
+					AlbumStatus: { type: "string", enum: ["NEW", "PRE_ORDER", "NORMAL"] },
+					CollectionStatus: { type: "string", enum: ["OWNED", "WISHLIST"] },
+					Condition: { type: "string", enum: ["NEW", "SEALED", "USED"] },
+					ReviewSort: { type: "string", enum: ["LATEST", "RATING_DESC", "RATING_ASC"] },
+					Genre: { type: "string", enum: ["INDIE_ROCK", "K_POP", "JAZZ", "CLASSIC", "CITY_POP", "HIPHOP", "ROCK"] },
+					ApiErrorResponse: {
+						type: "object",
+						properties: {
+							status: { type: "integer", example: 400 },
+							error: { type: "string", example: "Bad Request" },
+							errorCode: { type: "string", example: "VALIDATION_ERROR" },
+							path: { type: "string", example: "/api/v1/collections" },
+							fieldErrors: { type: "object", additionalProperties: { type: "string" } }
+						}
+					},
+					SignupRequest: {
+						type: "object",
+						required: ["userId", "password", "nickname"],
+						properties: {
+							userId: { type: "string", example: "alice" },
+							password: { type: "string", minLength: 8, example: "password1234" },
+							nickname: { type: "string", example: "레코드콜렉터" }
+						}
+					},
+					LoginRequest: {
+						type: "object",
+						required: ["userId", "password"],
+						properties: {
+							userId: { type: "string", example: "alice" },
+							password: { type: "string", example: "password1234" }
+						}
+					},
+					OAuthAuthorizeResponse: {
+						type: "object",
+						properties: {
+							provider: { type: "string", example: "kakao" },
+							authorizationUrl: { type: "string", format: "uri", example: "https://kauth.kakao.com/oauth/authorize?..." },
+							state: { type: "string", example: "opaque-state" }
+						}
+					},
+					OAuthLoginRequest: {
+						type: "object",
+						required: ["code", "state"],
+						properties: {
+							code: { type: "string", example: "authorization-code" },
+							state: { type: "string", example: "opaque-state" }
+						}
+					},
+					OAuthLoginResponse: {
+						type: "object",
+						properties: {
+							accessToken: {
+								type: "object",
+								properties: {
+									token: { type: "string", example: "eyJhbGciOiJIUzI1NiJ9..." },
+									tokenType: { type: "string", example: "Bearer" },
+									expiresIn: { type: "integer", example: 3600 }
+								}
+							},
+							userId: { type: "string", example: "1" },
+							nickname: { type: "string", example: "준서초이" },
+							provider: { type: "string", example: "KAKAO" },
+							onboardingCompleted: { type: "boolean", example: false }
+						}
+					},
+					UserProfile: {
+						type: "object",
+						properties: {
+							userId: { type: "string", example: "1" },
+							nickname: { type: "string", example: "준서초이" },
+							bio: { type: "string", example: "내 프로필을 확인하세요" },
+							profileImageUrl: { type: ["string", "null"], example: null },
+							provider: { type: "string", example: "KAKAO" },
+							onboardingCompleted: { type: "boolean", example: true },
+							stats: {
+								type: "object",
+								properties: {
+									collectionCount: { type: "integer", example: 0 },
+									wishlistCount: { type: "integer", example: 0 },
+									reviewCount: { type: "integer", example: 0 }
+								}
+							}
+						}
+					},
+					UpdateProfileRequest: {
+						type: "object",
+						properties: {
+							nickname: { type: "string", maxLength: 50, example: "레코드콜렉터" },
+							bio: { type: "string", maxLength: 500, example: "인디 록 매니아" },
+							profileImageUrl: { type: "string", format: "uri", example: "https://cdn.example.com/profile/alice.png" }
+						}
+					},
+					HomeFeed: {
+						type: "object",
+						properties: {
+							headline: ref("HomeHeadline"),
+							newReleases: { type: "array", items: ref("AlbumSummary") },
+							usedMarketAlbums: { type: "array", items: ref("MarketAlbum") },
+							trendingComments: { type: "array", items: ref("TrendingComment") },
+							favoriteArtistNews: { type: "array", items: ref("FavoriteArtistNews") }
+						}
+					},
+					HomeHeadline: {
+						type: "object",
+						properties: {
+							type: { type: "string", example: "PRE_ORDER" },
+							title: { type: "string", example: "한로로 -이상비행 LP 리프레스" },
+							subtitle: { type: "string", example: "예약판매 오늘 14:00 시작!" },
+							albumId: { type: "integer", example: 101 }
+						}
+					},
+					ArtistSearchItem: {
+						type: "object",
+						properties: {
+							artistId: { type: "integer", example: 1 },
+							name: { type: "string", example: "잔나비" },
+							displayName: { type: "string", example: "잔나비" },
+							initial: { type: "string", example: "Z" },
+							selected: { type: "boolean", example: true }
+						}
+					},
+					FavoriteArtist: {
+						type: "object",
+						properties: {
+							artistId: { type: "integer", example: 1 },
+							name: { type: "string", example: "잔나비" },
+							initial: { type: "string", example: "Z" }
+						}
+					},
+					UpdateFavoriteArtistsRequest: {
+						type: "object",
+						required: ["artistIds"],
+						properties: {
+							artistIds: { type: "array", items: { type: "integer" }, example: [1, 4] },
+							completeOnboarding: { type: "boolean", example: true }
+						}
+					},
+					UpdateFavoriteArtistsResponse: {
+						type: "object",
+						properties: {
+							favoriteArtists: { type: "array", items: ref("FavoriteArtist") },
+							onboardingCompleted: { type: "boolean", example: true }
+						}
+					},
+					AlbumSummary: {
+						type: "object",
+						properties: {
+							albumId: { type: "integer", example: 201 },
+							title: { type: "string", example: "정규 4집 개화" },
+							artistName: { type: "string", example: "악뮤" },
+							releaseDate: { type: "string", format: "date", example: "2026-04-07" },
+							mediaType: ref("MediaType"),
+							genre: ref("Genre"),
+							status: ref("AlbumStatus"),
+							coverImageUrl: { type: "string", format: "uri", example: "https://cdn.example.com/albums/201.jpg" },
+							listPrice: { type: "integer", example: 24900 },
+							salePrice: { type: "integer", example: 20800 },
+							averageRating: { type: "number", example: 4.5 },
+							reviewCount: { type: "integer", example: 3 }
+						}
+					},
+					AlbumDetail: {
+						type: "object",
+						properties: {
+							albumId: { type: "integer", example: 201 },
+							title: { type: "string", example: "정규 4집 개화" },
+							artist: ref("AlbumArtist"),
+							releaseDate: { type: "string", format: "date", example: "2026-04-07" },
+							mediaType: ref("MediaType"),
+							genre: ref("Genre"),
+							categoryPath: { type: "string", example: "음반>가요>발라드/R&B" },
+							status: ref("AlbumStatus"),
+							coverImageUrl: { type: "string", format: "uri", example: "https://cdn.example.com/albums/201.jpg" },
+							listPrice: { type: "integer", example: 24900 },
+							salePrice: { type: "integer", example: 20800 },
+							specifications: { type: "array", items: { type: "string" } },
+							reviewSummary: ref("ReviewSummary"),
+							marketSummary: ref("AlbumMarketSummary"),
+							collectionState: ref("CollectionState")
+						}
+					},
+					AlbumArtist: {
+						type: "object",
+						properties: {
+							artistId: { type: "integer", example: 10 },
+							name: { type: "string", example: "악뮤" }
+						}
+					},
+					ReviewSummary: {
+						type: "object",
+						properties: {
+							averageRating: { type: "number", example: 4.5 },
+							ratingCount: { type: "integer", example: 3 },
+							ratingDistribution: { type: "object", additionalProperties: { type: "integer" }, example: { "5": 1, "4": 1, "3": 1, "2": 0, "1": 0 } }
+						}
+					},
+					AlbumMarketSummary: {
+						type: "object",
+						properties: {
+							lowestPrice: { type: "integer", example: 20800 },
+							listingCount: { type: "integer", example: 2 }
+						}
+					},
+					CollectionState: {
+						type: "object",
+						properties: {
+							inCollection: { type: "boolean", example: false },
+							collectionItemId: { type: ["integer", "null"], example: null },
+							inWishlist: { type: "boolean", example: false }
+						}
+					},
+					Review: {
+						type: "object",
+						properties: {
+							reviewId: { type: "integer", example: 1 },
+							writer: ref("ReviewWriter"),
+							rating: { type: "number", example: 5.0 },
+							content: { type: "string", example: "음질이 너무 좋네요. 역시 명반입니다. 꼭 들어보세요!" },
+							likeCount: { type: "integer", example: 1993 },
+							commentCount: { type: "integer", example: 0 },
+							createdAt: { type: "string", format: "date-time", example: "2026-04-05T12:00:00" }
+						}
+					},
+					ReviewWriter: {
+						type: "object",
+						properties: {
+							userId: { type: "string", example: "user-1" },
+							nickname: { type: "string", example: "음악매니아" },
+							profileInitial: { type: "string", example: "음" }
+						}
+					},
+					ReviewRequest: {
+						type: "object",
+						required: ["rating", "content"],
+						properties: {
+							rating: { type: "number", minimum: 0, maximum: 5, example: 4.5 },
+							content: { type: "string", example: "처음 입문하기 좋은 앨범인 것 같아요. 추천합니다." }
+						}
+					},
+					ReviewCreated: {
+						type: "object",
+						properties: {
+							reviewId: { type: "integer", example: 10 },
+							albumId: { type: "integer", example: 201 },
+							rating: { type: "number", example: 4.5 },
+							content: { type: "string", example: "처음 입문하기 좋은 앨범인 것 같아요. 추천합니다." },
+							createdAt: { type: "string", format: "date-time", example: "2026-05-03T12:00:00" }
+						}
+					},
+					MyReview: {
+						type: "object",
+						properties: {
+							reviewId: { type: "integer", example: 1 },
+							album: ref("AlbumBrief"),
+							rating: { type: "number", example: 5.0 },
+							content: { type: "string", example: "좋음, 좋음, 좋음!" },
+							createdAt: { type: "string", format: "date-time", example: "2026-04-05T12:00:00" }
+						}
+					},
+					AlbumBrief: {
+						type: "object",
+						properties: {
+							albumId: { type: "integer", example: 201 },
+							title: { type: "string", example: "정규 4집 개화" },
+							artistName: { type: "string", example: "악뮤" },
+							coverImageUrl: { type: "string", format: "uri", example: "https://cdn.example.com/albums/201.jpg" }
+						}
+					},
+					CollectionSummary: {
+						type: "object",
+						properties: {
+							totalValue: { type: "integer", example: 1274000 },
+							counts: {
+								type: "object",
+								properties: {
+									total: { type: "integer", example: 25 },
+									lp: { type: "integer", example: 18 },
+									cd: { type: "integer", example: 7 },
+									wishlist: { type: "integer", example: 5 },
+									etc: { type: "integer", example: 18 }
+								}
+							}
+						}
+					},
+					CollectionAlbum: {
+						type: "object",
+						properties: {
+							albumId: { type: "integer", example: 201 },
+							title: { type: "string", example: "리스트 : 피아노 협주곡 1번 / 라벨 : 피아노 협주곡" },
+							artistName: { type: "string", example: "리스트" },
+							releaseDate: { type: "string", format: "date", example: "2026-03-31" },
+							mediaType: ref("MediaType"),
+							categoryPath: { type: "string", example: "음반>클래식>협주곡" },
+							coverImageUrl: { type: "string", format: "uri", example: "https://cdn.example.com/albums/201.jpg" },
+							listPrice: { type: "integer", example: 25600 }
+						}
+					},
+					CollectionItem: {
+						type: "object",
+						properties: {
+							collectionItemId: { type: "integer", example: 1001 },
+							album: ref("CollectionAlbum"),
+							status: ref("CollectionStatus"),
+							condition: ref("Condition"),
+							purchasePrice: { type: "integer", example: 45000 },
+							currentEstimatedPrice: { type: "integer", example: 55000 },
+							priceChangeRate: { type: "number", example: 22.0 },
+							priceChangeAmount: { type: "integer", example: 10000 }
+						}
+					},
+					CollectionItemRequest: {
+						type: "object",
+						required: ["albumId", "status"],
+						properties: {
+							albumId: { type: "integer", example: 201 },
+							status: ref("CollectionStatus"),
+							condition: ref("Condition"),
+							purchasePrice: { type: "integer", minimum: 0, example: 45000 },
+							purchaseDate: { type: "string", format: "date", example: "2026-04-05" },
+							purchasePlace: { type: "string", example: "알라딘" },
+							memo: { type: "string", example: "너무너무 좋았다" }
+						}
+					},
+					CollectionItemCreated: {
+						type: "object",
+						properties: {
+							collectionItemId: { type: "integer", example: 1001 }
+						}
+					},
+					CollectionItemDetail: {
+						type: "object",
+						properties: {
+							collectionItemId: { type: "integer", example: 1001 },
+							album: ref("CollectionAlbum"),
+							status: ref("CollectionStatus"),
+							condition: ref("Condition"),
+							purchasePrice: { type: "integer", example: 45000 },
+							purchaseDate: { type: "string", format: "date", example: "2026-04-05" },
+							purchasePlace: { type: "string", example: "알라딘" },
+							memo: { type: "string", example: "너무너무 좋았다" },
+							marketValue: ref("MarketValue")
+						}
+					},
+					MarketValue: {
+						type: "object",
+						properties: {
+							currentEstimatedPrice: { type: "integer", example: 55000 },
+							priceChangeRate: { type: "number", example: 22.0 },
+							priceChangeAmount: { type: "integer", example: 10000 }
+						}
+					},
+					PortfolioReport: {
+						type: "object",
+						properties: {
+							totalValue: { type: "integer", example: 1274000 },
+							monthlyChangeAmount: { type: "integer", example: 24000 },
+							monthlyChangeRate: { type: "number", example: 15.2 },
+							albumCount: { type: "integer", example: 25 },
+							valueHistory: { type: "array", items: ref("PortfolioValuePoint") },
+							genreDistribution: { type: "array", items: ref("PortfolioGenre") }
+						}
+					},
+					PortfolioValuePoint: {
+						type: "object",
+						properties: {
+							month: { type: "string", example: "2026-04" },
+							label: { type: "string", example: "4월" },
+							value: { type: "integer", example: 1274000 }
+						}
+					},
+					PortfolioGenre: {
+						type: "object",
+						properties: {
+							genre: { type: "string", example: "ROCK" },
+							label: { type: "string", example: "록" },
+							count: { type: "integer", example: 8 },
+							ratio: { type: "number", example: 32.0 }
+						}
+					},
+					MarketAlbum: {
+						type: "object",
+						properties: {
+							albumId: { type: "integer", example: 301 },
+							title: { type: "string", example: "EP 3집 자몽살구클럽" },
+							artistName: { type: "string", example: "한로로" },
+							mediaType: ref("MediaType"),
+							coverImageUrl: { type: "string", format: "uri", example: "https://cdn.example.com/albums/301.jpg" },
+							lowestPrice: { type: "integer", example: 19000 },
+							listingCount: { type: "integer", example: 6 }
+						}
+					},
+					MarketAlbumSummary: {
+						type: "object",
+						properties: {
+							albumId: { type: "integer", example: 301 },
+							lowestPrice: { type: "integer", example: 19000 },
+							listingCount: { type: "integer", example: 6 },
+							recentAveragePrice: { type: "integer", example: 23000 },
+							updatedAt: { type: "string", format: "date-time", example: "2026-05-03T12:00:00" }
+						}
+					},
+					TrendingComment: {
+						type: "object",
+						properties: {
+							reviewId: { type: "integer", example: 401 },
+							albumId: { type: "integer", example: 302 },
+							albumTitle: { type: "string", example: "정규 4집 개화" },
+							artistName: { type: "string", example: "악뮤" },
+							writerNickname: { type: "string", example: "이리땅" },
+							rating: { type: "integer", example: 5 },
+							content: { type: "string", example: "좋음, 좋음, 좋음!" },
+							likeCount: { type: "integer", example: 1993 },
+							commentCount: { type: "integer", example: 20 },
+							createdAt: { type: "string", format: "date-time", example: "2026-04-05T12:00:00" }
+						}
+					},
+					FavoriteArtistNews: {
+						type: "object",
+						properties: {
+							newsId: { type: "integer", example: 501 },
+							artistId: { type: "integer", example: 1 },
+							artistName: { type: "string", example: "한로로" },
+							title: { type: "string", example: "한로로-자몽살구 클럽" },
+							description: { type: "string", example: "정규 1집 발매 예정" },
+							mediaType: ref("MediaType"),
+							tag: { type: "string", example: "관심 아티스트" },
+							albumId: { type: "integer", example: 101 }
+						}
+					},
+					Notification: {
+						type: "object",
+						properties: {
+							notificationId: { type: "integer", example: 1 },
+							type: { type: "string", example: "FAVORITE_ARTIST_RELEASE" },
+							title: { type: "string", example: "한로로 신보 발매 예정" },
+							body: { type: "string", example: "자몽살구 클럽 정규 1집 발매 예정" },
+							targetType: { type: "string", example: "ALBUM" },
+							targetId: { type: "integer", example: 101 },
+							read: { type: "boolean", example: false },
+							createdAt: { type: "string", format: "date-time", example: "2026-05-03T12:00:00" }
+						}
+					},
+					NotificationRead: {
+						type: "object",
+						properties: {
+							notificationId: { type: "integer", example: 1 },
+							read: { type: "boolean", example: true }
+						}
+					}
+				}
+			}
+		};
+
+		window.addEventListener("load", () => {
+			if (!window.SwaggerUIBundle) {
+				document.getElementById("cdn-error").style.display = "block";
+				return;
+			}
+
+			window.ui = SwaggerUIBundle({
+				spec: openApiSpec,
+				dom_id: "#swagger-ui",
+				deepLinking: true,
+				persistAuthorization: true,
+				displayOperationId: false,
+				filter: true,
+				tryItOutEnabled: false,
+				presets: [
+					SwaggerUIBundle.presets.apis,
+					SwaggerUIStandalonePreset
+				],
+				layout: "StandaloneLayout"
+			});
+		});
+	</script>
+</body>
+</html>
