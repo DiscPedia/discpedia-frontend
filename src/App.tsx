@@ -10,6 +10,7 @@ import SearchPage from "./pages/SearchPage";
 import CollectionPage from "./pages/CollectionPage";
 import MyPage from "./pages/MyPage";
 import LoginPage from "./pages/LoginPage";
+import DetailPage from "./pages/DetailPage";
 import RecommandPage from "./pages/RecommandPage";
 import Login from "./components/common/Login";
 import MyReviewPage from "./pages/MyReviewPage";
@@ -25,6 +26,8 @@ const router = createBrowserRouter([
     element: <LoginPage />,
   },
   {
+    path: "/detail/:id",
+    element: <DetailPage />,
     path: "/login/oauth2/code/kakao",
     element: <Login />,
   },
