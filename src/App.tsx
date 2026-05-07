@@ -10,6 +10,7 @@ import SearchPage from "./pages/SearchPage";
 import CollectionPage from "./pages/CollectionPage";
 import MyPage from "./pages/MyPage";
 import LoginPage from "./pages/LoginPage";
+import DetailPage from "./pages/DetailPage";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
+  },
+  {
+    path: "/detail/:id",
+    element: <DetailPage />,
   },
   {
     element: <BackgroundPage />,
