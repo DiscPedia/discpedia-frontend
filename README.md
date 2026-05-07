@@ -20,6 +20,7 @@ npm run dev
 npm run build
 npm run lint
 
+6)msw 사용 mockdata불러옴
 
 린트 미리 설정했습니당! 일단 널널한 규칙으로 했..
 커밋 안되면 린트오류가 있는 것이니 해결하고 푸쉬해주세욥
