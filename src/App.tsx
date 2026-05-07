@@ -21,7 +21,7 @@ import CollectionDetailPage from "./pages/CollectionDetailPage";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to="/login" replace />,
+    element: <Navigate to="/home" replace />,
   },
   {
     path: "/login",
