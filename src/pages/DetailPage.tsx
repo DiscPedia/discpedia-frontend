@@ -57,6 +57,10 @@ const DetailPage = () => {
 	);
 	const record = stateRecord ?? fallbackRecord ?? fallbackRecords[0];
 
+	const handleAddCollection = () => {
+		navigate(`/collection/add/${record.id}`, { state: { record } });
+	};
+
 	const specItems = [
 		"1 CD (스탠다드 블랙 / 컬러 바이닐 랜덤 발송)",
 		"포스터, 가사지, 포토카드 포함 (초회 한정판 기준)",
@@ -117,7 +121,7 @@ const DetailPage = () => {
 			<SpecList items={specItems} />
 			<ReviewSummary rating={4.5} totalReviews={3} distribution={reviewDistribution} />
 			<ReviewList items={reviews} />
-			<BottomCTA label="내 컬렉션에 추가하기" />
+			<BottomCTA label="내 컬렉션에 추가하기" onClick={handleAddCollection} />
 		</main>
 	);
 };

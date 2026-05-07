@@ -11,6 +11,7 @@ import CollectionPage from "./pages/CollectionPage";
 import MyPage from "./pages/MyPage";
 import LoginPage from "./pages/LoginPage";
 import DetailPage from "./pages/DetailPage";
+import AddCollectionsPage from "./pages/AddCollectionsPage";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
   {
     path: "/detail/:id",
     element: <DetailPage />,
+  },
+  {
+    path: "/collection/add/:id",
+    element: <AddCollectionsPage />,
   },
   {
     element: <BackgroundPage />,
