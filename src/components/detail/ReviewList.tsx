@@ -4,7 +4,6 @@ interface ReviewItem {
   score: number;
   content: string;
   date: string;
-  likes: number;
 }
 
 interface Props {
@@ -40,7 +39,6 @@ const ReviewList = ({ items }: Props) => {
             </p>
             <div className="mt-3 flex items-center justify-between text-xs text-gray-400">
               <span>{item.date}</span>
-              <span>👍 {item.likes}</span>
             </div>
           </article>
         ))}

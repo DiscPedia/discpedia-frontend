@@ -78,7 +78,6 @@ const DetailPage = () => {
 			score: 5,
 			content: "응원이 너무 좋네요, 역시 명반입니다. 꼭 들어보세요!",
 			date: "2026.04.05",
-			likes: 1993,
 		},
 		{
 			id: 2,
@@ -86,7 +85,6 @@ const DetailPage = () => {
 			score: 4,
 			content: "패키징이 아쉽지만 음악은 완벽합니다.",
 			date: "2026.04.02",
-			likes: 993,
 		},
 		{
 			id: 3,
@@ -94,7 +92,6 @@ const DetailPage = () => {
 			score: 4.5,
 			content: "처음 입문하기 좋은 앨범인 것 같아요. 추천합니다.",
 			date: "2026.03.28",
-			likes: 193,
 		},
 	];
 
