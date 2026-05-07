@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 import {
   getCollectionItems,
   getCollectionSummary,
@@ -17,7 +17,8 @@ const CollectionPage = () => {
   const [items, setItems] = useState<CollectionItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
-
+  const navigate = useNavigate();
+  
   useEffect(() => {
     let cancelled = false;
     const load = async () => {
@@ -162,6 +163,8 @@ const CollectionPage = () => {
           items.map((item) => (
             <article
               key={item.collectionItemId}
+              role="button"
+              onClick={() => navigate(`/collection/${item.collectionItemId}`)}
               className="flex align-center rounded-2xl border border-gray-200 bg-white p-3 shadow-sm shadow-gray-200/50"
             >
               <div className="flex flex-col gap-3">
