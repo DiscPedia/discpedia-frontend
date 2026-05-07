@@ -12,11 +12,15 @@ import MyPage from "./pages/MyPage";
 import LoginPage from "./pages/LoginPage";
 import DetailPage from "./pages/DetailPage";
 import AddCollectionsPage from "./pages/AddCollectionsPage";
+import RecommandPage from "./pages/RecommandPage";
+import Login from "./components/common/Login";
+import MyReviewPage from "./pages/MyReviewPage";
+import PortfolioPage from "./pages/PortfolioPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to="/home" />,
+    element: <Navigate to="/login" replace />,
   },
   {
     path: "/login",
@@ -25,6 +29,24 @@ const router = createBrowserRouter([
   {
     path: "/detail/:id",
     element: <DetailPage />,
+    path: "/login/oauth2/code/kakao",
+    element: <Login />,
+  },
+  {
+    path: "/login/oauth2/code/google",
+    element: <Login />,
+  },
+  {
+    path: "/recommand",
+    element: <RecommandPage />,
+  },
+  {
+    path: "/myReview",
+    element: <MyReviewPage />,
+  },
+  {
+    path: "/portfolio",
+    element: <PortfolioPage />,
   },
   {
     path: "/collection/add/:id",
