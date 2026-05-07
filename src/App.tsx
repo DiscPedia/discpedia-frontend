@@ -16,6 +16,7 @@ import RecommandPage from "./pages/RecommandPage";
 import Login from "./components/common/Login";
 import MyReviewPage from "./pages/MyReviewPage";
 import PortfolioPage from "./pages/PortfolioPage";
+import CollectionDetailPage from "./pages/CollectionDetailPage";
 
 const router = createBrowserRouter([
   {
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
   {
     path: "/collection/add/:id",
     element: <AddCollectionsPage />,
+  },
+  {
+    path: "/collection/:collectionItemId",
+    element: <CollectionDetailPage />,
   },
   {
     element: <BackgroundPage />,

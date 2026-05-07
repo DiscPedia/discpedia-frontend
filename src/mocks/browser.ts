@@ -2,5 +2,5 @@ import { setupWorker } from "msw/browser";
 import { handlers } from "./artistHandlers";
 import { mypageHandlers } from "./mypageHandler";
 import { myreviewHandlers } from "./myreviewHandler";
-
-export const worker = setupWorker(...handlers, ...mypageHandlers, ...myreviewHandlers);
+import { collectionHandlers } from "./collectionHandler";
+export const worker = setupWorker(...handlers, ...mypageHandlers, ...myreviewHandlers, ...collectionHandlers);
