@@ -5,11 +5,13 @@ import {
 } from "react-router-dom";
 
 import BackgroundPage from "./pages/BackgroundPage";
-import HomePage from "./pages/Homepage";
+import HomePage from "./pages/HomePage";
 import SearchPage from "./pages/SearchPage";
 import CollectionPage from "./pages/CollectionPage";
 import MyPage from "./pages/MyPage";
 import LoginPage from "./pages/LoginPage";
+import DetailPage from "./pages/DetailPage";
+import AddCollectionsPage from "./pages/AddCollectionsPage";
 import RecommandPage from "./pages/RecommandPage";
 import Login from "./components/common/Login";
 import MyReviewPage from "./pages/MyReviewPage";
@@ -23,6 +25,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
+  },
+  {
+    path: "/detail/:id",
+    element: <DetailPage />,
   },
   {
     path: "/login/oauth2/code/kakao",
@@ -43,6 +49,10 @@ const router = createBrowserRouter([
   {
     path: "/portfolio",
     element: <PortfolioPage />,
+  },
+  {
+    path: "/collection/add/:id",
+    element: <AddCollectionsPage />,
   },
   {
     element: <BackgroundPage />,

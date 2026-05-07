@@ -21,7 +21,7 @@ export default defineConfig([
     },
     // 2. 널널한 규칙 설정 (rules)
     rules: {
-      'no-unused-vars': 'warn', // 미사용 변수: 경고만
+      'no-unused-vars': 'off', // TS에서 false positive 방지
       '@typescript-eslint/no-unused-vars': 'warn',
       'no-console': 'off', // 콘솔 로그 허용
       '@typescript-eslint/no-explicit-any': 'off', // any 타입 허용
