@@ -5,7 +5,7 @@ import {
 } from "react-router-dom";
 
 import BackgroundPage from "./pages/BackgroundPage";
-import HomePage from "./pages/Homepage";
+import HomePage from "./pages/HomePage";
 import SearchPage from "./pages/SearchPage";
 import CollectionPage from "./pages/CollectionPage";
 import MyPage from "./pages/MyPage";
