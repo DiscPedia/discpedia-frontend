@@ -1,7 +1,7 @@
 import displayIcon from "../assets/display.svg";
 import kakaoIcon from "../assets/kakaoBanner.svg";
 import googleIcon from "../assets/googleBanner.svg";
-import { login } from "../apis/auth/ApiService";
+import { startOAuthLogin } from "../apis/auth/auth";
 
 const LoginPage = () => {
   return (
@@ -22,7 +22,7 @@ const LoginPage = () => {
       <section className="w-full max-w-[360px] space-y-3 pb-6">
         <button
           type="button"
-          onClick={() => login("kakao")}
+          onClick={() => startOAuthLogin("kakao")}
           className="flex h-[48px] w-full items-center justify-center gap-4 rounded-[12px] bg-[#FEE500]"
         >
           <img
@@ -34,7 +34,7 @@ const LoginPage = () => {
         </button>
         <button
           type="button"
-          onClick={() => login("google")}
+          onClick={() => startOAuthLogin("google")}
           className="flex h-[48px] w-full items-center justify-center gap-4 rounded-[12px] bg-white border border-[#E6E6E6]"
         >
           <img
