@@ -1,5 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import type { RecordItem } from "../../types/record";
+type RecordItem = {
+  id: number;
+  label: string;
+  format: string;
+  title: string;
+  subtitle: string;
+  date: string;
+};
 
 const Record = ({ item }: { item: RecordItem }) => {
   const navigate = useNavigate();
@@ -8,7 +15,9 @@ const Record = ({ item }: { item: RecordItem }) => {
     <div className="grid grid-cols-1 gap-4">
       <button
         type="button"
-        onClick={() => navigate(`/detail/${item.id}`, { state: { record: item } })}
+        onClick={() =>
+          navigate(`/detail/${item.id}`, { state: { record: item } })
+        }
         className="text-left"
       >
         <article className="bg-white rounded-3xl border border-gray-100 shadow-md overflow-hidden">
