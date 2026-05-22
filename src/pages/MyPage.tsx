@@ -85,16 +85,16 @@ const MyPage = () => {
       {/* 프로필 카드 */}
       <section className="mb-3 flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm shadow-gray-200/50">
         <img
-          src={me?.profileImageUrl || defaultProfile}
+          src={defaultProfile}
           alt="프로필"
           className="h-14 w-14 shrink-0 rounded-full object-cover"
-          onError={(e) => {
-            e.currentTarget.src = defaultProfile;
-          }}
         />
         <div className="min-w-0 flex-1">
-          <p className="font-semibold text-gray-900">{me?.name??"사용자"}</p>
-          <p className="text-sm text-gray-500">내 프로필을 확인하세요</p>
+          <p className="font-semibold text-gray-900">{me?.name ?? "사용자"}</p>
+          <p className="text-sm text-gray-500">{me?.email ?? ""}</p>
+          {me?.provider ? (
+            <p className="text-xs text-gray-400">로그인: {me.provider}</p>
+          ) : null}
         </div>
         <button
           type="button"
@@ -118,22 +118,21 @@ const MyPage = () => {
       </div>
       {/* 메뉴 */}
       <nav className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm shadow-gray-200/50">
-        {[{title: "내 리뷰 모아보기", path: "/myReview"}, {title: "관심 아티스트 관리", path: "/recommand"}, {title: "포트폴리오 변동 내역", path: "/portfolio"}].map(
-          (item) => (
-            <button
-              key={item.title}
-              onClick={() => navigate(item.path)}
-              type="button"
-              className="flex w-full items-center justify-between px-4 py-4 text-left text-gray-900 border-b border-gray-100">
-              <span>{item.title}</span>
-              <img
-                src={rightChevronIcon}
-                alt=""
-                className="h-4 w-4 opacity-40"
-              />
-            </button>
-          ),
-        )}
+        {[
+          { title: "내 리뷰 모아보기", path: "/myReview" },
+          { title: "관심 아티스트 관리", path: "/recommand" },
+          { title: "포트폴리오 변동 내역", path: "/portfolio" },
+        ].map((item) => (
+          <button
+            key={item.title}
+            onClick={() => navigate(item.path)}
+            type="button"
+            className="flex w-full items-center justify-between px-4 py-4 text-left text-gray-900 border-b border-gray-100"
+          >
+            <span>{item.title}</span>
+            <img src={rightChevronIcon} alt="" className="h-4 w-4 opacity-40" />
+          </button>
+        ))}
       </nav>
     </div>
   );
