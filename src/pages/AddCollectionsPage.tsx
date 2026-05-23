@@ -8,6 +8,10 @@ import InputField from "../components/collection/InputField";
 import RecordSummaryCard from "../components/collection/RecordSummaryCard";
 import SubmitBar from "../components/collection/SubmitBar";
 import TextAreaField from "../components/collection/TextAreaField";
+import {
+	createCollection,
+	type Condition,
+} from "../apis/collection/collection";
 
 type RecordItem = {
 	id: number;
@@ -50,6 +54,12 @@ const fallbackRecords: RecordItem[] = [
 	},
 ];
 
+const conditionMap: Record<ConditionType, Condition> = {
+	새제품: "NEW",
+	미개봉: "SEALED",
+	중고: "USED",
+};
+
 const AddCollectionsPage = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -68,18 +78,35 @@ const AddCollectionsPage = () => {
 	const [purchaseDate, setPurchaseDate] = useState("");
 	const [store, setStore] = useState("");
 	const [memo, setMemo] = useState("");
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const handleSubmit = async () => {
-		const payload = {
-			recordId: record.id,
-			condition,
-			price,
-			purchaseDate,
-			store,
-			memo,
-		};
+		const purchasePrice = Number(price);
 
-		await Promise.resolve(payload);
+		if (!Number.isFinite(purchasePrice) || purchasePrice < 0) {
+			window.alert("구매 가격을 올바르게 입력해 주세요.");
+			return;
+		}
+
+		try {
+			setIsSubmitting(true);
+
+			const data = await createCollection({
+				aladinItemId: record.id,
+				status: "OWNED",
+				condition: conditionMap[condition],
+				purchasePrice,
+				purchaseDate: purchaseDate || undefined,
+				purchasePlace: store || undefined,
+				memo: memo || undefined,
+			});
+
+			navigate(`/collection/${data.collectionItemId}`);
+		} catch {
+			window.alert("컬렉션 등록에 실패했습니다.");
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
 	return (
@@ -118,7 +145,11 @@ const AddCollectionsPage = () => {
 					onChange={setMemo}
 				/>
 			</div>
-			<SubmitBar label="컬렉션에 등록하기" onSubmit={handleSubmit} />
+			<SubmitBar
+				label={isSubmitting ? "등록 중..." : "컬렉션에 등록하기"}
+				onSubmit={handleSubmit}
+				disabled={isSubmitting}
+			/>
 		</main>
 	);
 };
