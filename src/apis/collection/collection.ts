@@ -47,6 +47,20 @@ export type CollectionListParams = {
   sort?: string;
 };
 
+export type CreateCollectionRequest = {
+  aladinItemId: number;
+  status: CollectionStatus;
+  condition: Condition;
+  purchasePrice: number;
+  purchaseDate?: string;
+  purchasePlace?: string;
+  memo?: string;
+};
+
+export type CollectionCreatedResponse = {
+  collectionItemId: number;
+};
+
 const toQueryString = (params: CollectionListParams) => {
   const search = new URLSearchParams();
   Object.entries(params).forEach(([key, value]) => {
@@ -73,5 +87,17 @@ export const getCollectionItems = async (
   const res = (await call(`/api/collections${query}`, "GET")) as ApiResponse<
     PageResponse<CollectionItem>
   >;
+  return res.data;
+};
+
+export const createCollection = async (
+  request: CreateCollectionRequest,
+): Promise<CollectionCreatedResponse> => {
+  const res = (await call(
+    "/api/v1/collections",
+    "POST",
+    request,
+  )) as ApiResponse<CollectionCreatedResponse>;
+
   return res.data;
 };
