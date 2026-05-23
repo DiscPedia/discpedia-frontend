@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import {
   getNewReleases,
@@ -13,11 +14,22 @@ const formatWon = (value: number) => `${value.toLocaleString("ko-KR")}원`;
 
 type NewReleaseCardProps = {
   item: NewRelease;
+  onClick: () => void;
 };
 
-const NewReleaseCard = ({ item }: NewReleaseCardProps) => {
+const NewReleaseCard = ({ item, onClick }: NewReleaseCardProps) => {
   return (
-    <article className="min-w-[150px] w-[150px] bg-white rounded-2xl p-3 shadow-sm border border-gray-100">
+    <article
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          onClick();
+        }
+      }}
+      className="min-w-[150px] w-[150px] bg-white rounded-2xl p-3 shadow-sm border border-gray-100 cursor-pointer"
+    >
       <div className="flex items-center justify-between gap-2 text-[10px] font-semibold">
         <span className="bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">
           NEW
@@ -58,12 +70,14 @@ type NewReleaseSectionProps = {
   items: NewRelease[];
   loading: boolean;
   error: string | null;
+  onItemClick: (aladinItemId: number) => void;
 };
 
 const NewReleaseSection = ({
   items,
   loading,
   error,
+  onItemClick,
 }: NewReleaseSectionProps) => {
   return (
     <section className="w-full flex flex-col gap-3">
@@ -114,7 +128,11 @@ const NewReleaseSection = ({
       {!loading && !error && items.length > 0 && (
         <div className="flex gap-4 overflow-x-auto pb-2">
           {items.map((item) => (
-            <NewReleaseCard key={item.newReleaseId} item={item} />
+            <NewReleaseCard
+              key={item.newReleaseId}
+              item={item}
+              onClick={() => onItemClick(item.aladinItemId)}
+            />
           ))}
         </div>
       )}
@@ -124,11 +142,22 @@ const NewReleaseSection = ({
 
 type UsedAlbumCardProps = {
   item: UsedAlbum;
+  onClick: () => void;
 };
 
-const UsedAlbumCard = ({ item }: UsedAlbumCardProps) => {
+const UsedAlbumCard = ({ item, onClick }: UsedAlbumCardProps) => {
   return (
-    <article className="min-w-[180px] w-[180px] bg-white rounded-2xl p-3 shadow-sm border border-gray-100">
+    <article
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          onClick();
+        }
+      }}
+      className="min-w-[180px] w-[180px] bg-white rounded-2xl p-3 shadow-sm border border-gray-100 cursor-pointer"
+    >
       <div className="flex items-center justify-between gap-2 text-[10px] font-semibold">
         <span className="bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">
           중고
@@ -166,9 +195,15 @@ type UsedAlbumSectionProps = {
   items: UsedAlbum[];
   loading: boolean;
   error: string | null;
+  onItemClick: (aladinItemId: number) => void;
 };
 
-const UsedAlbumSection = ({ items, loading, error }: UsedAlbumSectionProps) => {
+const UsedAlbumSection = ({
+  items,
+  loading,
+  error,
+  onItemClick,
+}: UsedAlbumSectionProps) => {
   return (
     <section className="w-full flex flex-col gap-3">
       <div className="flex items-center justify-between">
@@ -218,7 +253,11 @@ const UsedAlbumSection = ({ items, loading, error }: UsedAlbumSectionProps) => {
       {!loading && !error && items.length > 0 && (
         <div className="flex gap-4 overflow-x-auto pb-2">
           {items.map((item) => (
-            <UsedAlbumCard key={item.aladinItemId} item={item} />
+            <UsedAlbumCard
+              key={item.aladinItemId}
+              item={item}
+              onClick={() => onItemClick(item.aladinItemId)}
+            />
           ))}
         </div>
       )}
@@ -227,6 +266,7 @@ const UsedAlbumSection = ({ items, loading, error }: UsedAlbumSectionProps) => {
 };
 
 const HomePage = () => {
+  const navigate = useNavigate();
   const [newReleases, setNewReleases] = useState<NewRelease[]>([]);
   const [newReleasesLoading, setNewReleasesLoading] = useState(true);
   const [newReleasesError, setNewReleasesError] = useState<string | null>(null);
@@ -351,12 +391,14 @@ const HomePage = () => {
           items={newReleases}
           loading={newReleasesLoading}
           error={newReleasesError}
+          onItemClick={(aladinItemId) => navigate(`/detail/${aladinItemId}`)}
         />
 
         <UsedAlbumSection
           items={usedAlbums}
           loading={usedAlbumsLoading}
           error={usedAlbumsError}
+          onItemClick={(aladinItemId) => navigate(`/detail/${aladinItemId}`)}
         />
 
         <section className="w-full flex flex-col gap-3">
