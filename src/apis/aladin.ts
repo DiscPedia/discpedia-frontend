@@ -71,9 +71,37 @@ export type AlbumDetail = {
   reviewSummary?: AlbumReviewSummary;
 };
 
+export type AlbumSearchItem = {
+  aladinItemId: number;
+  title: string;
+  artistName: string;
+  mediaType: MediaType;
+  releaseDate: string;
+  coverImageUrl: string;
+  productUrl: string;
+  publisher: string;
+  categoryName: string;
+  priceSales: number;
+  priceStandard: number;
+};
+
+export type AlbumSearchResponse = {
+  limit: number;
+  offset: number;
+  total: number;
+  items: AlbumSearchItem[];
+};
+
 export type AladinPageParams = {
   page?: number;
   size?: number;
+};
+
+export type AlbumSearchParams = {
+  q: string;
+  artist?: string;
+  limit?: number;
+  offset?: number;
 };
 
 const toQueryString = (params: AladinPageParams) => {
@@ -81,6 +109,19 @@ const toQueryString = (params: AladinPageParams) => {
 
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined && value !== null) {
+      search.set(key, String(value));
+    }
+  });
+
+  const query = search.toString();
+  return query ? `?${query}` : "";
+};
+
+const toSearchQueryString = (params: AlbumSearchParams) => {
+  const search = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
       search.set(key, String(value));
     }
   });
@@ -122,4 +163,11 @@ export const getAlbumDetail = async (
   )) as ApiResponse<AlbumDetail>;
 
   return res.data;
+};
+
+export const searchAlbums = async (
+  params: AlbumSearchParams,
+): Promise<AlbumSearchResponse> => {
+  const query = toSearchQueryString(params);
+  return (await call(`/api/v1/aladin${query}`, "GET")) as AlbumSearchResponse;
 };
