@@ -2,7 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { getAlbumDetail, type AlbumDetail } from "../apis/aladin";
-import { getAlbumReviews, type ReviewItem } from "../apis/review";
+import {
+  getAlbumReviews,
+  likeReview,
+  unlikeReview,
+  type ReviewItem,
+} from "../apis/review";
 import AlbumHero from "../components/detail/AlbumHero";
 import BottomCTA from "../components/detail/BottomCTA";
 import DetailHeader from "../components/detail/DetailHeader";
@@ -131,6 +136,45 @@ const DetailPage = () => {
     });
   };
 
+  const handleToggleLike = async (review: ReviewItem) => {
+    setReviews((prev) =>
+      prev.map((item) =>
+        item.reviewId === review.reviewId
+          ? {
+              ...item,
+              likedByMe: !item.likedByMe,
+              likeCount: item.likedByMe
+                ? Math.max(0, item.likeCount - 1)
+                : item.likeCount + 1,
+            }
+          : item,
+      ),
+    );
+
+    try {
+      const data = review.likedByMe
+        ? await unlikeReview(review.reviewId)
+        : await likeReview(review.reviewId);
+
+      setReviews((prev) =>
+        prev.map((item) =>
+          item.reviewId === data.reviewId
+            ? {
+                ...item,
+                likeCount: data.likeCount,
+                likedByMe: data.likedByMe,
+              }
+            : item,
+        ),
+      );
+    } catch {
+      setReviews((prev) =>
+        prev.map((item) => (item.reviewId === review.reviewId ? review : item)),
+      );
+      window.alert("좋아요 처리에 실패했습니다.");
+    }
+  };
+
   if (invalidAlbumId || error) {
     return (
       <main className="flex-1 w-full bg-[#F5F5F5]">
@@ -208,6 +252,7 @@ const DetailPage = () => {
         items={reviews}
         loading={reviewsLoading}
         error={reviewsError}
+        onToggleLike={handleToggleLike}
       />
       <BottomCTA label="내 컬렉션에 추가하기" onClick={handleAddCollection} />
     </main>

@@ -33,6 +33,12 @@ export type ReviewItem = {
   createdAt: string;
 };
 
+export type ReviewLikeResponse = {
+  reviewId: number;
+  likeCount: number;
+  likedByMe: boolean;
+};
+
 export type ReviewListParams = {
   sort?: ReviewSort;
   page?: number;
@@ -74,6 +80,28 @@ export const getAlbumReviews = async (
     `/api/v1/albums/${aladinItemId}/reviews${query}`,
     "GET",
   )) as ApiResponse<PageResponse<ReviewItem>>;
+
+  return res.data;
+};
+
+export const likeReview = async (
+  reviewId: number,
+): Promise<ReviewLikeResponse> => {
+  const res = (await call(
+    `/api/v1/reviews/${reviewId}/like`,
+    "PUT",
+  )) as ApiResponse<ReviewLikeResponse>;
+
+  return res.data;
+};
+
+export const unlikeReview = async (
+  reviewId: number,
+): Promise<ReviewLikeResponse> => {
+  const res = (await call(
+    `/api/v1/reviews/${reviewId}/like`,
+    "DELETE",
+  )) as ApiResponse<ReviewLikeResponse>;
 
   return res.data;
 };

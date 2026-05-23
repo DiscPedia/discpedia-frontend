@@ -4,11 +4,17 @@ interface Props {
   items: ReviewItem[];
   loading?: boolean;
   error?: string | null;
+  onToggleLike?: (review: ReviewItem) => void;
 }
 
 const formatDate = (value: string) => value.split("T")[0]?.replaceAll("-", ".") ?? value;
 
-const ReviewList = ({ items, loading = false, error = null }: Props) => {
+const ReviewList = ({
+  items,
+  loading = false,
+  error = null,
+  onToggleLike,
+}: Props) => {
   return (
     <section className="bg-white px-5 pb-24">
       <div className="flex items-center justify-between mb-3">
@@ -64,9 +70,16 @@ const ReviewList = ({ items, loading = false, error = null }: Props) => {
               </p>
               <div className="mt-3 flex items-center justify-between text-xs text-gray-400">
                 <span>{formatDate(item.createdAt)}</span>
-                <span>
-                  좋아요 {item.likeCount} · 댓글 {item.commentCount}
-                </span>
+                <button
+                  type="button"
+                  onClick={() => onToggleLike?.(item)}
+                  className={`font-medium ${
+                    item.likedByMe ? "text-red-500" : "text-gray-400"
+                  }`}
+                  aria-label={item.likedByMe ? "좋아요 취소" : "좋아요"}
+                >
+                  {item.likedByMe ? "♥" : "♡"} {item.likeCount}
+                </button>
               </div>
             </article>
           ))}
