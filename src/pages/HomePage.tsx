@@ -38,7 +38,7 @@ const NewReleaseCard = ({ item, onClick }: NewReleaseCardProps) => {
           {item.mediaType}
         </span>
       </div>
-      <div className="w-full h-24 rounded-xl mt-3 bg-gray-100 overflow-hidden">
+      <div className="w-full aspect-square rounded-xl mt-3 bg-gray-100 overflow-hidden">
         {item.coverImageUrl ? (
           <img
             src={item.coverImageUrl}
@@ -104,7 +104,7 @@ const NewReleaseSection = ({
                 <div className="h-4 w-10 rounded-full bg-gray-100" />
                 <div className="h-4 w-8 rounded-full bg-gray-100" />
               </div>
-              <div className="w-full h-24 rounded-xl mt-3 bg-gray-100" />
+              <div className="w-full aspect-square rounded-xl mt-3 bg-gray-100" />
               <div className="h-4 w-full rounded bg-gray-100 mt-3" />
               <div className="h-3 w-16 rounded bg-gray-100 mt-2" />
               <div className="h-4 w-20 rounded bg-gray-100 mt-3" />
@@ -166,7 +166,7 @@ const UsedAlbumCard = ({ item, onClick }: UsedAlbumCardProps) => {
           {item.mediaType}
         </span>
       </div>
-      <div className="w-full h-28 rounded-xl mt-3 bg-gray-100 overflow-hidden">
+      <div className="w-full aspect-square rounded-xl mt-3 bg-gray-100 overflow-hidden">
         {item.coverImageUrl ? (
           <img
             src={item.coverImageUrl}
@@ -229,7 +229,7 @@ const UsedAlbumSection = ({
                 <div className="h-4 w-10 rounded-full bg-gray-100" />
                 <div className="h-4 w-8 rounded-full bg-gray-100" />
               </div>
-              <div className="w-full h-28 rounded-xl mt-3 bg-gray-100" />
+              <div className="w-full aspect-square rounded-xl mt-3 bg-gray-100" />
               <div className="h-4 w-full rounded bg-gray-100 mt-3" />
               <div className="h-3 w-20 rounded bg-gray-100 mt-2" />
               <div className="h-5 w-24 rounded bg-gray-100 mt-3" />
