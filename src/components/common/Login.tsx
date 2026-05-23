@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import {
   completeOAuthLogin,
@@ -11,18 +11,26 @@ function getProviderFromPath(pathname: string): OAuthProvider | null {
   return null;
 }
 
+/** StrictMode remount에도 유지 (컴포넌트 밖 ref) */
+const oauthHandledRef = { current: false };
+
 const Login = () => {
   const location = useLocation();
   const [done, setDone] = useState(false);
   const [failed, setFailed] = useState(false);
+  const mountedRef = useRef(true);
 
   useEffect(() => {
-    let cancelled = false;
+    mountedRef.current = true;
+
+    if (oauthHandledRef.current) {
+      return;
+    }
+    oauthHandledRef.current = true;
 
     async function run() {
       const params = new URLSearchParams(location.search);
 
-      // 예전 방식(쿼리에 token이 바로 오는 경우) 호환
       const legacyToken =
         params.get("token") ||
         params.get("accessToken") ||
@@ -30,7 +38,7 @@ const Login = () => {
 
       if (legacyToken) {
         localStorage.setItem("accessToken", legacyToken);
-        if (!cancelled) setDone(true);
+        if (mountedRef.current) setDone(true);
         return;
       }
 
@@ -39,22 +47,26 @@ const Login = () => {
       const state = params.get("state");
 
       if (!provider || !code || !state) {
-        if (!cancelled) setFailed(true);
+        oauthHandledRef.current = false;
+        if (mountedRef.current) setFailed(true);
         return;
       }
 
       try {
         await completeOAuthLogin(provider, code, state);
-        if (!cancelled) setDone(true);
+        if (mountedRef.current) setDone(true);
       } catch (e) {
         console.error(e);
-        if (!cancelled) setFailed(true);
+        localStorage.removeItem("accessToken");
+        oauthHandledRef.current = false;
+        if (mountedRef.current) setFailed(true);
       }
     }
 
-    run();
+    void run();
+
     return () => {
-      cancelled = true;
+      mountedRef.current = false;
     };
   }, [location]);
 

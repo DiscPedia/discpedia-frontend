@@ -5,6 +5,7 @@ import likeIcon from "../assets/like.svg";
 import reviewIcon from "../assets/review.svg";
 import rightChevronIcon from "../assets/rightChev.svg";
 import { useNavigate } from "react-router-dom";
+import { logout } from "../apis/auth/auth";
 
 import {
   getMe,
@@ -20,6 +21,13 @@ const MyPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    const ok = window.confirm("로그아웃 하시겠습니까?");
+    if (!ok) return;
+    await logout();
+    navigate("/login", { replace: true });
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -99,6 +107,7 @@ const MyPage = () => {
         <button
           type="button"
           className="shrink-0 rounded-full bg-gray-100 px-3 py-1.5 text-sm text-gray-800 shadow-sm shadow-gray-200/50"
+          onClick={handleLogout}
         >
           로그아웃
         </button>

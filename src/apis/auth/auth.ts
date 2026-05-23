@@ -51,3 +51,15 @@ export async function completeOAuthLogin(
     sessionStorage.removeItem(OAUTH_STATE_KEY);
     return res.data;
   }
+
+
+  export async function logout() {
+    try {
+      await call("/api/v1/auth/logout", "POST");
+    } catch {
+      // 서버 실패해도 클라이언트는 로그아웃 처리
+    } finally {
+      localStorage.removeItem("accessToken");
+      sessionStorage.removeItem("oauth_state");
+    }
+  }
