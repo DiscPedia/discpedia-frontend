@@ -1,32 +1,17 @@
 import Record from "../components/common/Record";
+import { useNewReleases } from "../hooks/useNewReleases";
 
 const SearchPage = () => {
-  const newReleases = [
-    {
-      id: 1,
-      label: "NEW",
-      format: "CD",
-      title: "리스트: 피아노 협주곡",
-      subtitle: "리스트",
-      date: "2025.03.31",
-    },
-    {
-      id: 2,
-      label: "NEW",
-      format: "CD",
-      title: "모차르트: 피아노 협주곡",
-      subtitle: "모차르트",
-      date: "2025.04.01",
-    },
-    {
-      id: 3,
-      label: "NEW",
-      format: "CD",
-      title: "브람스: 교향곡",
-      subtitle: "브람스",
-      date: "2025.04.05",
-    },
-  ];
+  const { items, loading, error } = useNewReleases(20);
+  const newReleases = items.map((item) => ({
+    id: item.aladinItemId,
+    label: "NEW",
+    format: item.mediaType,
+    title: item.title,
+    subtitle: item.artistName,
+    date: item.releaseDate.replaceAll("-", "."),
+    coverImageUrl: item.coverImageUrl,
+  }));
 
   return (
     <main className="flex-1 w-full overflow-y-auto bg-[#F5F5F5]">
@@ -41,11 +26,31 @@ const SearchPage = () => {
             />
           </div>
         </section>
-        <div className="text-2xl font-bold pl-3">추천 음반</div>
+        <div className="text-2xl font-bold pl-3">새로 나온 음반</div>
+        {loading && (
+          <section className="grid grid-cols-2 gap-6">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <div
+                key={index}
+                className="h-[250px] rounded-3xl bg-white border border-gray-100 shadow-md animate-pulse"
+              />
+            ))}
+          </section>
+        )}
+        {!loading && error && (
+          <div className="bg-white rounded-2xl p-4 text-sm text-gray-500 border border-gray-100">
+            새 음반 목록을 불러오지 못했습니다.
+          </div>
+        )}
+        {!loading && !error && newReleases.length === 0 && (
+          <div className="bg-white rounded-2xl p-4 text-sm text-gray-500 border border-gray-100">
+            새로 나온 음반이 없습니다.
+          </div>
+        )}
         <section className="grid grid-cols-2 gap-6">
-          {newReleases.map((item) => (
-            <Record key={item.id} item={item} />
-          ))}
+          {!loading &&
+            !error &&
+            newReleases.map((item) => <Record key={item.id} item={item} />)}
         </section>
       </div>
     </main>
