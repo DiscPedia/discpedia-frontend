@@ -89,7 +89,7 @@ const SearchPage = () => {
   const title = isSearching ? "검색 결과" : "새로 나온 음반";
 
   return (
-    <main className="flex-1 w-full overflow-y-auto bg-[#F5F5F5]">
+    <main className="flex-1 w-full overflow-y-auto scrollbar-hide bg-[#F5F5F5]">
       <div className="px-4 pb-10 pt-4 flex flex-col gap-6">
         <section className="w-full">
           <div className="bg-white rounded-full px-4 py-3 flex items-center gap-3 shadow-sm border border-gray-100">

@@ -82,7 +82,7 @@ const CollectionDetailPage = () => {
           </button>
         </div>
       </header>
-      <main className="min-h-0 flex-1 overflow-y-auto px-4 pt-3 pb-[calc(96px+env(safe-area-inset-bottom))]">
+      <main className="min-h-0 flex-1 overflow-y-auto scrollbar-hide px-4 pt-3 pb-[calc(96px+env(safe-area-inset-bottom))]">
         {loading && (
           <div className="rounded-2xl border border-gray-200 bg-white p-4 text-sm text-gray-500">
             불러오는 중...

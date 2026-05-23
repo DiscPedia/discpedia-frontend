@@ -62,7 +62,7 @@ const MyPage = () => {
 
   if (loading) {
     return (
-      <div className="w-full flex-1 overflow-y-auto bg-[#f5f5f5] px-4 pb-6 pt-2">
+      <div className="w-full flex-1 overflow-y-auto scrollbar-hide bg-[#f5f5f5] px-4 pb-6 pt-2">
         <div className="rounded-2xl border border-gray-200 bg-white p-4 text-sm text-gray-500 shadow-sm shadow-gray-200/50">
           마이페이지 정보를 불러오는 중...
         </div>
@@ -72,7 +72,7 @@ const MyPage = () => {
 
   if (errorMessage) {
     return (
-      <div className="w-full flex-1 overflow-y-auto bg-[#f5f5f5] px-4 pb-6 pt-2">
+      <div className="w-full flex-1 overflow-y-auto scrollbar-hide bg-[#f5f5f5] px-4 pb-6 pt-2">
         <div className="rounded-2xl border border-red-200 bg-white p-4 text-sm text-red-600 shadow-sm shadow-gray-200/50">
           {errorMessage}
         </div>
@@ -81,7 +81,7 @@ const MyPage = () => {
   }
 
   return (
-    <div className="w-full flex-1 overflow-y-auto bg-[#f5f5f5] px-4 pb-6 pt-2">
+    <div className="w-full flex-1 overflow-y-auto scrollbar-hide bg-[#f5f5f5] px-4 pb-6 pt-2">
       {/* 프로필 카드 */}
       <section className="mb-3 flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm shadow-gray-200/50">
         <img
