@@ -154,12 +154,16 @@ const filterItems = (
 };
 
 export const collectionHandlers = [
+  http.get("*/api/v1/collections/summary", () => {
+    return HttpResponse.json(collectionSummaryMock);
+  }),
   http.get("*/api/collections/summary", () => {
     return HttpResponse.json(collectionSummaryMock);
   }),
 
-  http.get("*/api/collections", ({ request }) => {
+  http.get("*/api/v1/collections", ({ request }) => {
     const url = new URL(request.url);
+    if (url.pathname.endsWith("/summary")) return;
     const mediaType = url.searchParams.get("mediaType") as MediaType | null;
     const status = url.searchParams.get("status") as CollectionStatus | null;
     const q = url.searchParams.get("q");
@@ -182,6 +186,53 @@ export const collectionHandlers = [
         totalPages: Math.ceil(filtered.length / size),
         hasNext: start + size < filtered.length,
       },
+    });
+  }),
+
+  http.get("*/api/collections", ({ request }) => {
+    const url = new URL(request.url);
+    if (url.pathname.includes("/summary")) return;
+    const mediaType = url.searchParams.get("mediaType") as MediaType | null;
+    const status = url.searchParams.get("status") as CollectionStatus | null;
+    const q = url.searchParams.get("q");
+    const page = Number(url.searchParams.get("page") ?? 0);
+    const size = Number(url.searchParams.get("size") ?? 20);
+
+    const filtered = filterItems(collectionItemsMock, mediaType, status, q);
+    const start = page * size;
+    const paged = filtered.slice(start, start + size);
+
+    return HttpResponse.json({
+      success: true,
+      message: "Collection items retrieved",
+      timestamp: now,
+      data: {
+        items: paged,
+        page,
+        size,
+        totalItems: filtered.length,
+        totalPages: Math.ceil(filtered.length / size),
+        hasNext: start + size < filtered.length,
+      },
+    });
+  }),
+
+  http.get("*/api/v1/collections/:collectionItemId", ({ params }) => {
+    const id = Number(params.collectionItemId);
+    const detail = collectionDetailMockMap[id];
+
+    if (!detail) {
+      return HttpResponse.json(
+        { success: false, message: "Not found", timestamp: now, data: null },
+        { status: 404 },
+      );
+    }
+
+    return HttpResponse.json({
+      success: true,
+      message: "Collection item detail retrieved",
+      timestamp: now,
+      data: detail,
     });
   }),
 

@@ -10,6 +10,7 @@ import conditionIcon from "../assets/condition.svg";
 import backIcon from "../assets/backArrow.svg";
 
 import {
+  deleteCollection,
   getCollectionItemDetail,
   type CollectionItemDetail,
 } from "../apis/collection/collectionDetail";
@@ -28,6 +29,7 @@ const CollectionDetailPage = () => {
   const { collectionItemId } = useParams();
   const [item, setItem] = useState<CollectionItemDetail | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
@@ -60,6 +62,33 @@ const CollectionDetailPage = () => {
     [item?.priceChangeAmount, item?.priceChangeRate],
   );
 
+  const handleEdit = () => {
+    if (!item) return;
+    navigate(`/collection/add/${item.album.albumId}`, {
+      state: {
+        mode: "edit",
+        collectionItemId: item.collectionItemId,
+        item,
+      },
+    });
+  };
+
+  const handleDelete = async () => {
+    if (!item || isDeleting) return;
+    const confirmed = window.confirm("이 컬렉션을 삭제할까요?");
+    if (!confirmed) return;
+
+    try {
+      setIsDeleting(true);
+      await deleteCollection(item.collectionItemId);
+      navigate("/collection", { replace: true });
+    } catch {
+      window.alert("컬렉션 삭제에 실패했습니다.");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <div className="flex min-h-dvh w-full flex-col bg-[#f5f5f5]">
       <header className="relative flex h-14 shrink-0 items-center justify-between border-b border-gray-200 bg-white px-4">
@@ -74,10 +103,20 @@ const CollectionDetailPage = () => {
           <button type="button" className="rounded-md p-2 hover:bg-gray-100">
             <img src={shareIcon} alt="공유" className="h-5 w-5" />
           </button>
-          <button type="button" className="rounded-md p-2 hover:bg-gray-100">
+          <button
+            type="button"
+            onClick={handleEdit}
+            disabled={!item || loading}
+            className="rounded-md p-2 hover:bg-gray-100 disabled:opacity-40"
+          >
             <img src={pencilIcon} alt="수정" className="h-5 w-5" />
           </button>
-          <button type="button" className="rounded-md p-2 hover:bg-gray-100">
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={!item || loading || isDeleting}
+            className="rounded-md p-2 hover:bg-gray-100 disabled:opacity-40"
+          >
             <img src={trashIcon} alt="삭제" className="h-5 w-5" />
           </button>
         </div>
