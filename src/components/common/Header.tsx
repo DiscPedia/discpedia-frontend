@@ -1,8 +1,11 @@
 import { useNavigate } from "react-router-dom";
+import Logo from "../../assets/common/Logo.svg";
+
 const Header = () => {
   const navigate = useNavigate();
   return (
     <div className="w-full h-16 bg-white flex items-center justify-between px-2">
+      <img src={Logo} alt="DiscPedia Logo" />
       <div className="w-full h-full flex items-center justify-between">
         <div className="flex items-center pl-4">
           <button
