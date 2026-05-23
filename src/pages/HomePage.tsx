@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
-  getNewReleases,
   getUsedAlbums,
   type NewRelease,
   type UsedAlbum,
 } from "../apis/aladin";
+import { useNewReleases } from "../hooks/useNewReleases";
 
 const formatDate = (value: string) => value.replaceAll("-", ".");
 
@@ -51,7 +51,7 @@ const NewReleaseCard = ({ item, onClick }: NewReleaseCardProps) => {
         )}
       </div>
       <div className="mt-3">
-        <p className="text-sm font-semibold text-gray-900 line-clamp-2">
+        <p className="text-sm font-semibold text-gray-900 truncate">
           {item.title}
         </p>
         <p className="text-xs text-gray-500 truncate">{item.artistName}</p>
@@ -179,7 +179,7 @@ const UsedAlbumCard = ({ item, onClick }: UsedAlbumCardProps) => {
         )}
       </div>
       <div className="mt-3">
-        <p className="text-sm font-semibold text-gray-900 line-clamp-2">
+        <p className="text-sm font-semibold text-gray-900 truncate">
           {item.title}
         </p>
         <p className="text-xs text-gray-500 truncate">{item.artistName}</p>
@@ -392,43 +392,14 @@ const UsedAlbumSection = ({
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const [newReleases, setNewReleases] = useState<NewRelease[]>([]);
-  const [newReleasesLoading, setNewReleasesLoading] = useState(true);
-  const [newReleasesError, setNewReleasesError] = useState<string | null>(null);
+  const {
+    items: newReleases,
+    loading: newReleasesLoading,
+    error: newReleasesError,
+  } = useNewReleases(20);
   const [usedAlbums, setUsedAlbums] = useState<UsedAlbum[]>([]);
   const [usedAlbumsLoading, setUsedAlbumsLoading] = useState(true);
   const [usedAlbumsError, setUsedAlbumsError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let ignore = false;
-
-    const loadNewReleases = async () => {
-      try {
-        setNewReleasesLoading(true);
-        setNewReleasesError(null);
-
-        const data = await getNewReleases({ page: 0, size: 20 });
-
-        if (!ignore) {
-          setNewReleases(data.items);
-        }
-      } catch {
-        if (!ignore) {
-          setNewReleasesError("Failed to load new releases");
-        }
-      } finally {
-        if (!ignore) {
-          setNewReleasesLoading(false);
-        }
-      }
-    };
-
-    void loadNewReleases();
-
-    return () => {
-      ignore = true;
-    };
-  }, []);
 
   useEffect(() => {
     let ignore = false;

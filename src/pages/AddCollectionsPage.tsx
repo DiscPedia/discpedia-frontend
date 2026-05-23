@@ -20,6 +20,7 @@ type RecordItem = {
 	title: string;
 	subtitle: string;
 	date: string;
+	coverImageUrl?: string;
   };
   
 
@@ -122,7 +123,11 @@ const AddCollectionsPage = () => {
 				onBack={() => navigate(-1)}
 			/>
 			<div className="mt-4 flex flex-col gap-6">
-				<RecordSummaryCard title={record.title} subtitle={record.subtitle} />
+				<RecordSummaryCard
+					title={record.title}
+					subtitle={record.subtitle}
+					coverImageUrl={record.coverImageUrl}
+				/>
 				<ConditionSelector value={condition} onChange={setCondition} />
 				<InputField
 					label="구매 가격 (원)"

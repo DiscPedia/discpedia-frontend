@@ -123,6 +123,7 @@ const DetailPage = () => {
           title: album.title,
           subtitle: album.artistName,
           date: formatDate(album.releaseDate),
+          coverImageUrl: album.coverImageUrl,
         },
       },
     });
