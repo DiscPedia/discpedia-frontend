@@ -31,6 +31,46 @@ export type UsedAlbum = {
   publisher: string;
 };
 
+export type AlbumUsedInfo = {
+  usedPrice: number;
+  originalPrice: number;
+  usedType: string;
+  subInfo?: unknown;
+};
+
+export type AlbumReviewSummary = {
+  averageRating: number;
+  ratingCount: number;
+  ratingDistribution: Record<string, number>;
+};
+
+export type AlbumDetail = {
+  aladinItemId: number;
+  title: string;
+  artistName: string;
+  mediaType: MediaType;
+  releaseDate: string;
+  coverImageUrl: string;
+  productUrl: string;
+  publisher: string;
+  categoryName: string;
+  priceSales: number;
+  priceStandard: number;
+  description?: string;
+  isbn?: string;
+  isbn13?: string;
+  mallType?: string;
+  stockStatus?: string;
+  mileage?: number;
+  salesPoint?: number;
+  adult?: boolean;
+  fixedPrice?: boolean;
+  customerReviewRank?: number;
+  subInfo?: unknown;
+  used?: AlbumUsedInfo;
+  reviewSummary?: AlbumReviewSummary;
+};
+
 export type AladinPageParams = {
   page?: number;
   size?: number;
@@ -69,6 +109,17 @@ export const getUsedAlbums = async (
     `/api/v1/aladin/used${query}`,
     "GET",
   )) as ApiResponse<PageResponse<UsedAlbum>>;
+
+  return res.data;
+};
+
+export const getAlbumDetail = async (
+  aladinItemId: number,
+): Promise<AlbumDetail> => {
+  const res = (await call(
+    `/api/v1/aladin/${aladinItemId}`,
+    "GET",
+  )) as ApiResponse<AlbumDetail>;
 
   return res.data;
 };
