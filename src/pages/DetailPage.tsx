@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { getAlbumDetail, type AlbumDetail } from "../apis/aladin";
+import { getAlbumReviews, type ReviewItem } from "../apis/review";
 import AlbumHero from "../components/detail/AlbumHero";
 import BottomCTA from "../components/detail/BottomCTA";
 import DetailHeader from "../components/detail/DetailHeader";
@@ -37,8 +38,11 @@ const DetailPage = () => {
   const aladinItemId = Number(id);
   const invalidAlbumId = !Number.isFinite(aladinItemId);
   const [album, setAlbum] = useState<AlbumDetail | null>(null);
+  const [reviews, setReviews] = useState<ReviewItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [reviewsLoading, setReviewsLoading] = useState(true);
+  const [reviewsError, setReviewsError] = useState<string | null>(null);
 
   useEffect(() => {
     if (invalidAlbumId) {
@@ -51,19 +55,31 @@ const DetailPage = () => {
       try {
         setLoading(true);
         setError(null);
+        setReviewsLoading(true);
+        setReviewsError(null);
 
-        const data = await getAlbumDetail(aladinItemId);
+        const [albumData, reviewData] = await Promise.all([
+          getAlbumDetail(aladinItemId),
+          getAlbumReviews(aladinItemId, {
+            sort: "LATEST",
+            page: 0,
+            size: 20,
+          }),
+        ]);
 
         if (!ignore) {
-          setAlbum(data);
+          setAlbum(albumData);
+          setReviews(reviewData.items);
         }
       } catch {
         if (!ignore) {
           setError("Failed to load album detail");
+          setReviewsError("Failed to load reviews");
         }
       } finally {
         if (!ignore) {
           setLoading(false);
+          setReviewsLoading(false);
         }
       }
     };
@@ -86,30 +102,6 @@ const DetailPage = () => {
       album.stockStatus ? `재고 상태: ${album.stockStatus}` : undefined,
     ].filter((item): item is string => Boolean(item));
   }, [album]);
-
-  const reviews = [
-    {
-      id: 1,
-      name: "음악매니아",
-      score: 5,
-      content: "응원이 너무 좋네요, 역시 명반입니다. 꼭 들어보세요!",
-      date: "2026.04.05",
-    },
-    {
-      id: 2,
-      name: "바이닐러버",
-      score: 4,
-      content: "패키징이 아쉽지만 음악은 완벽합니다.",
-      date: "2026.04.02",
-    },
-    {
-      id: 3,
-      name: "뉴비",
-      score: 4.5,
-      content: "처음 입문하기 좋은 앨범인 것 같아요. 추천합니다.",
-      date: "2026.03.28",
-    },
-  ];
 
   const handleAddCollection = () => {
     if (!album) return;
@@ -212,7 +204,11 @@ const DetailPage = () => {
         distribution={reviewDistribution}
         onWriteReview={handleWriteReview}
       />
-      <ReviewList items={reviews} />
+      <ReviewList
+        items={reviews}
+        loading={reviewsLoading}
+        error={reviewsError}
+      />
       <BottomCTA label="내 컬렉션에 추가하기" onClick={handleAddCollection} />
     </main>
   );

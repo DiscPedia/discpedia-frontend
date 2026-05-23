@@ -1,5 +1,5 @@
 import { call } from "./auth/ApiService";
-import type { ApiResponse } from "./commontype";
+import type { ApiResponse, PageResponse } from "./commontype";
 
 export type CreateReviewRequest = {
   rating: number;
@@ -14,6 +14,44 @@ export type ReviewMutationResponse = {
   createdAt: string;
 };
 
+export type ReviewSort = "LATEST" | "RATING_DESC" | "RATING_ASC";
+
+export type ReviewWriter = {
+  userId: string;
+  nickname: string;
+  profileInitial: string;
+};
+
+export type ReviewItem = {
+  reviewId: number;
+  writer: ReviewWriter;
+  rating: number;
+  content: string;
+  likeCount: number;
+  likedByMe: boolean;
+  commentCount: number;
+  createdAt: string;
+};
+
+export type ReviewListParams = {
+  sort?: ReviewSort;
+  page?: number;
+  size?: number;
+};
+
+const toQueryString = (params: ReviewListParams) => {
+  const search = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      search.set(key, String(value));
+    }
+  });
+
+  const query = search.toString();
+  return query ? `?${query}` : "";
+};
+
 export const createReview = async (
   aladinItemId: number,
   request: CreateReviewRequest,
@@ -23,6 +61,19 @@ export const createReview = async (
     "POST",
     request,
   )) as ApiResponse<ReviewMutationResponse>;
+
+  return res.data;
+};
+
+export const getAlbumReviews = async (
+  aladinItemId: number,
+  params: ReviewListParams = {},
+): Promise<PageResponse<ReviewItem>> => {
+  const query = toQueryString(params);
+  const res = (await call(
+    `/api/v1/albums/${aladinItemId}/reviews${query}`,
+    "GET",
+  )) as ApiResponse<PageResponse<ReviewItem>>;
 
   return res.data;
 };
