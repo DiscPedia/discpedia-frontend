@@ -17,12 +17,26 @@ export type NewRelease = {
   publisher: string;
 };
 
-export type NewReleaseListParams = {
+export type UsedAlbum = {
+  aladinItemId: number;
+  title: string;
+  artistName: string;
+  mediaType: MediaType;
+  usedPrice: number;
+  originalPrice: number;
+  coverImageUrl: string;
+  productUrl: string;
+  usedType: string;
+  categoryName: string;
+  publisher: string;
+};
+
+export type AladinPageParams = {
   page?: number;
   size?: number;
 };
 
-const toQueryString = (params: NewReleaseListParams) => {
+const toQueryString = (params: AladinPageParams) => {
   const search = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {
@@ -36,13 +50,25 @@ const toQueryString = (params: NewReleaseListParams) => {
 };
 
 export const getNewReleases = async (
-  params: NewReleaseListParams = {},
+  params: AladinPageParams = {},
 ): Promise<PageResponse<NewRelease>> => {
   const query = toQueryString(params);
   const res = (await call(
     `/api/v1/aladin/new-releases${query}`,
     "GET",
   )) as ApiResponse<PageResponse<NewRelease>>;
+
+  return res.data;
+};
+
+export const getUsedAlbums = async (
+  params: AladinPageParams = {},
+): Promise<PageResponse<UsedAlbum>> => {
+  const query = toQueryString(params);
+  const res = (await call(
+    `/api/v1/aladin/used${query}`,
+    "GET",
+  )) as ApiResponse<PageResponse<UsedAlbum>>;
 
   return res.data;
 };
