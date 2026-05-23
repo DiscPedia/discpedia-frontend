@@ -94,7 +94,7 @@ const NewReleaseSection = ({
       </div>
 
       {loading && (
-        <div className="flex gap-4 overflow-x-auto pb-2">
+        <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
           {Array.from({ length: 3 }).map((_, index) => (
             <div
               key={index}
@@ -126,7 +126,7 @@ const NewReleaseSection = ({
       )}
 
       {!loading && !error && items.length > 0 && (
-        <div className="flex gap-4 overflow-x-auto pb-2">
+        <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
           {items.map((item) => (
             <NewReleaseCard
               key={item.newReleaseId}
@@ -219,7 +219,7 @@ const UsedAlbumSection = ({
       </div>
 
       {loading && (
-        <div className="flex gap-4 overflow-x-auto pb-2">
+        <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
           {Array.from({ length: 3 }).map((_, index) => (
             <div
               key={index}
@@ -251,7 +251,7 @@ const UsedAlbumSection = ({
       )}
 
       {!loading && !error && items.length > 0 && (
-        <div className="flex gap-4 overflow-x-auto pb-2">
+        <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
           {items.map((item) => (
             <UsedAlbumCard
               key={item.aladinItemId}
@@ -373,7 +373,7 @@ const HomePage = () => {
   ];
 
   return (
-    <main className="flex-1 w-full overflow-y-auto bg-[#F5F5F5]">
+    <main className="flex-1 w-full overflow-y-auto scrollbar-hide bg-[#F5F5F5]">
       <div className="px-4 pb-8 pt-4 flex flex-col gap-6">
         <section className="w-full">
           <div className="bg-white rounded-2xl px-4 py-3 flex items-center gap-3 border border-orange-100 shadow-sm">
@@ -410,7 +410,7 @@ const HomePage = () => {
               더보기
             </button>
           </div>
-          <div className="flex gap-4 overflow-x-auto pb-2">
+          <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
             {hotContents.map((item) => (
               <article
                 key={item.id}
