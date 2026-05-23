@@ -129,6 +129,16 @@ const DetailPage = () => {
     });
   };
 
+  const handleWriteReview = () => {
+    if (!album) return;
+
+    navigate(`/review/write/${album.aladinItemId}`, {
+      state: {
+        album,
+      },
+    });
+  };
+
   if (invalidAlbumId || error) {
     return (
       <main className="flex-1 w-full bg-[#F5F5F5]">
@@ -200,6 +210,7 @@ const DetailPage = () => {
         rating={rating}
         totalReviews={ratingCount}
         distribution={reviewDistribution}
+        onWriteReview={handleWriteReview}
       />
       <ReviewList items={reviews} />
       <BottomCTA label="내 컬렉션에 추가하기" onClick={handleAddCollection} />
