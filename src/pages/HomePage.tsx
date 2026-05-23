@@ -1,33 +1,157 @@
+import { useEffect, useState } from "react";
+
+import { getNewReleases, type NewRelease } from "../apis/aladin";
+
+const formatDate = (value: string) => value.replaceAll("-", ".");
+
+const formatWon = (value: number) => `${value.toLocaleString("ko-KR")}원`;
+
+type NewReleaseCardProps = {
+  item: NewRelease;
+};
+
+const NewReleaseCard = ({ item }: NewReleaseCardProps) => {
+  return (
+    <article className="min-w-[150px] w-[150px] bg-white rounded-2xl p-3 shadow-sm border border-gray-100">
+      <div className="flex items-center justify-between gap-2 text-[10px] font-semibold">
+        <span className="bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">
+          NEW
+        </span>
+        <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+          {item.mediaType}
+        </span>
+      </div>
+      <div className="w-full h-24 rounded-xl mt-3 bg-gray-100 overflow-hidden">
+        {item.coverImageUrl ? (
+          <img
+            src={item.coverImageUrl}
+            alt={item.title}
+            className="h-full w-full object-cover"
+            loading="lazy"
+          />
+        ) : (
+          <div className="h-full w-full bg-gray-100" />
+        )}
+      </div>
+      <div className="mt-3">
+        <p className="text-sm font-semibold text-gray-900 line-clamp-2">
+          {item.title}
+        </p>
+        <p className="text-xs text-gray-500 truncate">{item.artistName}</p>
+        <p className="text-[10px] text-gray-400 mt-1">
+          {formatDate(item.releaseDate)}
+        </p>
+        <p className="text-sm font-semibold text-[#4C6FFF] mt-1">
+          {formatWon(item.priceSales)}
+        </p>
+      </div>
+    </article>
+  );
+};
+
+type NewReleaseSectionProps = {
+  items: NewRelease[];
+  loading: boolean;
+  error: string | null;
+};
+
+const NewReleaseSection = ({
+  items,
+  loading,
+  error,
+}: NewReleaseSectionProps) => {
+  return (
+    <section className="w-full flex flex-col gap-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-semibold text-white bg-[#FFB347] px-2 py-0.5 rounded-full">
+            NEW
+          </span>
+          <h2 className="text-lg font-semibold text-gray-900">새로 나온 음반</h2>
+        </div>
+        <button type="button" className="text-sm text-gray-400">
+          전체보기
+        </button>
+      </div>
+
+      {loading && (
+        <div className="flex gap-4 overflow-x-auto pb-2">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <div
+              key={index}
+              className="min-w-[150px] w-[150px] h-[210px] bg-white rounded-2xl p-3 shadow-sm border border-gray-100 animate-pulse"
+            >
+              <div className="flex items-center justify-between">
+                <div className="h-4 w-10 rounded-full bg-gray-100" />
+                <div className="h-4 w-8 rounded-full bg-gray-100" />
+              </div>
+              <div className="w-full h-24 rounded-xl mt-3 bg-gray-100" />
+              <div className="h-4 w-full rounded bg-gray-100 mt-3" />
+              <div className="h-3 w-16 rounded bg-gray-100 mt-2" />
+              <div className="h-4 w-20 rounded bg-gray-100 mt-3" />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {!loading && error && (
+        <div className="bg-white rounded-2xl p-4 text-sm text-gray-500 border border-gray-100">
+          새 음반 목록을 불러오지 못했습니다.
+        </div>
+      )}
+
+      {!loading && !error && items.length === 0 && (
+        <div className="bg-white rounded-2xl p-4 text-sm text-gray-500 border border-gray-100">
+          새로 나온 음반이 없습니다.
+        </div>
+      )}
+
+      {!loading && !error && items.length > 0 && (
+        <div className="flex gap-4 overflow-x-auto pb-2">
+          {items.map((item) => (
+            <NewReleaseCard key={item.newReleaseId} item={item} />
+          ))}
+        </div>
+      )}
+    </section>
+  );
+};
+
 const HomePage = () => {
-  const newReleases = [
-    {
-      id: 1,
-      label: "NEW",
-      format: "CD",
-      title: "리스트: 피아노 협주곡",
-      subtitle: "리스트",
-      date: "2025.03.31",
-      accent: "bg-rose-100",
-    },
-    {
-      id: 2,
-      label: "NEW",
-      format: "CD",
-      title: "모차르트: 피아노 협주곡",
-      subtitle: "모차르트",
-      date: "2025.04.01",
-      accent: "bg-blue-100",
-    },
-    {
-      id: 3,
-      label: "NEW",
-      format: "CD",
-      title: "브람스: 교향곡",
-      subtitle: "브람스",
-      date: "2025.04.05",
-      accent: "bg-green-100",
-    },
-  ];
+  const [newReleases, setNewReleases] = useState<NewRelease[]>([]);
+  const [newReleasesLoading, setNewReleasesLoading] = useState(true);
+  const [newReleasesError, setNewReleasesError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let ignore = false;
+
+    const loadNewReleases = async () => {
+      try {
+        setNewReleasesLoading(true);
+        setNewReleasesError(null);
+
+        const data = await getNewReleases({ page: 0, size: 20 });
+
+        if (!ignore) {
+          setNewReleases(data.items);
+        }
+      } catch {
+        if (!ignore) {
+          setNewReleasesError("Failed to load new releases");
+        }
+      } finally {
+        if (!ignore) {
+          setNewReleasesLoading(false);
+        }
+      }
+    };
+
+    void loadNewReleases();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   const usedAlbums = [
     {
@@ -110,52 +234,19 @@ const HomePage = () => {
           </div>
         </section>
 
-        <section className="w-full flex flex-col gap-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-semibold text-white bg-[#FFB347] px-2 py-0.5 rounded-full">
-                NEW
-              </span>
-              <h2 className="text-lg font-semibold text-gray-900">새로 나온 음반</h2>
-            </div>
-            <button type="button" className="text-sm text-gray-400">
-              전체보기
-            </button>
-          </div>
-          <div className="flex gap-4 overflow-x-auto pb-2">
-            {newReleases.map((item) => (
-              <article
-                key={item.id}
-                className="min-w-[150px] bg-white rounded-2xl p-3 shadow-sm border border-gray-100"
-              >
-                <div className="flex items-center justify-between text-[10px] font-semibold">
-                  <span className="bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">
-                    {item.label}
-                  </span>
-                  <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
-                    {item.format}
-                  </span>
-                </div>
-                <div
-                  className={`w-full h-24 rounded-xl mt-3 ${item.accent} flex items-center justify-center`}
-                >
-                  <div className="w-12 h-12 rounded-lg bg-white shadow-inner" />
-                </div>
-                <div className="mt-3">
-                  <p className="text-sm font-semibold text-gray-900">{item.title}</p>
-                  <p className="text-xs text-gray-500">{item.subtitle}</p>
-                  <p className="text-[10px] text-gray-400 mt-1">{item.date}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
+        <NewReleaseSection
+          items={newReleases}
+          loading={newReleasesLoading}
+          error={newReleasesError}
+        />
 
         <section className="w-full flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-base">🏠</span>
-              <h2 className="text-lg font-semibold text-gray-900">중고 거래 음반</h2>
+              <h2 className="text-lg font-semibold text-gray-900">
+                중고 거래 음반
+              </h2>
             </div>
             <button type="button" className="text-sm text-gray-400">
               더보기
@@ -181,7 +272,9 @@ const HomePage = () => {
                   <div className="w-14 h-14 rounded-lg bg-white shadow-inner" />
                 </div>
                 <div className="mt-3">
-                  <p className="text-sm font-semibold text-gray-900">{item.title}</p>
+                  <p className="text-sm font-semibold text-gray-900">
+                    {item.title}
+                  </p>
                   <p className="text-xs text-gray-500">{item.artist}</p>
                   <p className="text-base font-semibold text-[#4C6FFF] mt-2">
                     {item.price}
@@ -194,7 +287,9 @@ const HomePage = () => {
 
         <section className="w-full flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">지금 뜨는 콘텐츠</h2>
+            <h2 className="text-lg font-semibold text-gray-900">
+              지금 뜨는 콘텐츠
+            </h2>
             <button type="button" className="text-sm text-gray-400">
               더보기
             </button>
@@ -208,7 +303,9 @@ const HomePage = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-gray-100" />
-                    <p className="text-sm font-semibold text-gray-900">{item.name}</p>
+                    <p className="text-sm font-semibold text-gray-900">
+                      {item.name}
+                    </p>
                     <span className="text-[10px] text-white bg-red-400 px-1.5 py-0.5 rounded-full">
                       W
                     </span>
@@ -238,7 +335,9 @@ const HomePage = () => {
         </section>
 
         <section className="w-full flex flex-col gap-3">
-          <h2 className="text-lg font-semibold text-gray-900">관심 아티스트 소식</h2>
+          <h2 className="text-lg font-semibold text-gray-900">
+            관심 아티스트 소식
+          </h2>
           <div className="flex flex-col gap-3">
             {artistNews.map((item) => (
               <article
@@ -249,7 +348,9 @@ const HomePage = () => {
                   <div className="w-5 h-5 rounded-full bg-black" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-semibold text-gray-900">{item.name}</p>
+                  <p className="text-sm font-semibold text-gray-900">
+                    {item.name}
+                  </p>
                   <p className="text-xs text-gray-500 mt-1">{item.subtitle}</p>
                   <div className="mt-2 flex flex-wrap gap-1">
                     {item.tags.map((tag) => (
