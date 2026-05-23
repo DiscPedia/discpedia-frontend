@@ -119,7 +119,8 @@ const DetailPage = () => {
         price="20,800원"
       />
 			<SpecList items={specItems} />
-			<ReviewSummary rating={4.5} totalReviews={3} distribution={reviewDistribution} />
+			<ReviewSummary rating={4.5} totalReviews={3} 
+			distribution={reviewDistribution} onWriteReview={() => navigate(`/review/write/${record.id}`,{state:{record}})} />
 			<ReviewList items={reviews} />
 			<BottomCTA label="내 컬렉션에 추가하기" onClick={handleAddCollection} />
 		</main>
