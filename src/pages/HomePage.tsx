@@ -373,55 +373,6 @@ const HomePage = () => {
         />
 
         <section className="w-full flex flex-col gap-3">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">
-              지금 뜨는 콘텐츠
-            </h2>
-            <button type="button" className="text-sm text-gray-400">
-              더보기
-            </button>
-          </div>
-          <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
-            {hotContents.map((item) => (
-              <article
-                key={item.id}
-                className="min-w-[260px] bg-white rounded-2xl p-4 shadow-sm border border-gray-100"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-gray-100" />
-                    <p className="text-sm font-semibold text-gray-900">
-                      {item.name}
-                    </p>
-                    <span className="text-[10px] text-white bg-red-400 px-1.5 py-0.5 rounded-full">
-                      W
-                    </span>
-                  </div>
-                  <div className="text-yellow-400 text-xs">
-                    {"★".repeat(item.rating)}
-                  </div>
-                </div>
-                <div className="mt-3 flex gap-3">
-                  <div className="w-14 h-14 rounded-xl bg-amber-100 flex items-center justify-center">
-                    <div className="w-8 h-8 rounded-lg bg-white shadow-inner" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold text-gray-900">
-                      {item.title}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1">{item.excerpt}</p>
-                  </div>
-                </div>
-                <div className="mt-4 flex items-center gap-4 text-xs text-gray-400">
-                  <span>👍 {item.likes}</span>
-                  <span>💬 {item.comments}</span>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="w-full flex flex-col gap-3">
           <h2 className="text-lg font-semibold text-gray-900">
             관심 아티스트 소식
           </h2>
