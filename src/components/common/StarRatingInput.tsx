@@ -1,12 +1,5 @@
 type StarFill = "empty" | "half" | "full";
 
-const fillForIndex = (rating: number, index: number): StarFill => {
-  const r = rating - index;
-  if (r >= 1) return "full";
-  if (r >= 0.5) return "half";
-  return "empty";
-};
-
 const SingleStar = ({ fill, size = "text-3xl" }: { fill: StarFill; size?: string }) => {
   const base = `select-none leading-none ${size}`;
   if (fill === "full") return <span className={`${base} text-amber-400`}>★</span>;
