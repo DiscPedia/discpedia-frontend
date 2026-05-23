@@ -5,11 +5,11 @@ import backArrow from "../assets/backArrow.svg";
 import trashIcon from "../assets/trashCan.svg";
 import writeIcon from "../assets/write.svg";
 
-import { getMyReview, type MyReviewMockItem } from "../apis/mypage/myreview";
+import { getMyReviews, type MyReviewItem } from "../apis/mypage/myreview";
 import { StarRow } from "../components/common/StarRow";
 
 const MyReviewPage = () => {
-  const [items, setItems] = useState<MyReviewMockItem[]>([]);
+  const [items, setItems] = useState<MyReviewItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
@@ -20,8 +20,8 @@ const MyReviewPage = () => {
       try {
         setLoading(true);
         setErrorMessage("");
-        const data = await getMyReview();
-        if (!cancelled) setItems(data);
+        const page = await getMyReviews({ page: 0, size: 50 });
+        if (!cancelled) setItems(page.items);
       } catch {
         if (!cancelled) setErrorMessage("리뷰를 불러오지 못했습니다.");
       } finally {
@@ -60,11 +60,16 @@ const MyReviewPage = () => {
             {errorMessage}
           </div>
         )}
+        {!loading && !errorMessage && items.length === 0 && (
+          <div className="rounded-2xl border border-gray-200 bg-white p-4 text-sm text-gray-500 shadow-sm shadow-gray-200/50">
+            작성한 리뷰가 없습니다.
+          </div>
+        )}
         {!loading &&
           !errorMessage &&
-          items.map((item, index) => (
+          items.map((item) => (
             <article
-              key={`${item.album.albumName}-${item.reviewDate}-${index}`}
+              key={item.reviewId}
               className="mb-3 rounded-[18px] border border-gray-200 bg-white p-4 shadow-sm shadow-gray-200/50 last:mb-0"
             >
               <div className="flex gap-3">
