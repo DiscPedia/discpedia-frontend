@@ -4,10 +4,11 @@ import type { Me, MyPageStats } from "../apis/mypage/mypage";
 
 /** MSW mock: 소셜 로그인 후 사용자 정보 (GET /api/me) */
 const meResponse: Me = {
-  id: 101,
+  subject: "101",
   name: "김도현",
-  profileImageUrl: null,
+  email: "kimdoehyun@gmail.com",
   provider: "google",
+  providerId: "101",
 };
 
 /** MSW mock: 마이페이지 통계 (GET /api/me/stats) */

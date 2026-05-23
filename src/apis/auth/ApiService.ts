@@ -31,7 +31,6 @@ export async function call(api: string, method: string, request?: unknown) {
       throw new Error(response.statusText || `HTTP ${response.status}`);
     }
 
-    // 204 대응
     if (response.status === 204) return null;
 
     return await response.json();
@@ -39,13 +38,4 @@ export async function call(api: string, method: string, request?: unknown) {
     console.error(err);
     throw err;
   }
-}
-
-export function login(domain: string) {
-  const frontendUrl = window.location.origin;
-  const redirectUri = `${frontendUrl}/login/oauth2/code/${domain}`;
-
-  window.location.href =
-    `${API_BASE_URL}/oauth2/authorization/${domain}` +
-    `?redirect_uri=${encodeURIComponent(redirectUri)}`;
 }

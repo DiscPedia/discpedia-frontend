@@ -8,7 +8,16 @@ import InputField from "../components/collection/InputField";
 import RecordSummaryCard from "../components/collection/RecordSummaryCard";
 import SubmitBar from "../components/collection/SubmitBar";
 import TextAreaField from "../components/collection/TextAreaField";
-import type { RecordItem } from "../types/record";
+
+type RecordItem = {
+	id: number;
+	label: string;
+	format: string;
+	title: string;
+	subtitle: string;
+	date: string;
+  };
+  
 
 type RecordState = {
 	record?: RecordItem;
