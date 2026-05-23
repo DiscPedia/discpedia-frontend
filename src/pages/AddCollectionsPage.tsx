@@ -64,6 +64,7 @@ const AddCollectionsPage = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { id } = useParams();
+	const aladinItemId = Number(id);
 
 	const record = useMemo(() => {
 		const stateRecord = (location.state as RecordState | null)?.record;
@@ -83,6 +84,11 @@ const AddCollectionsPage = () => {
 	const handleSubmit = async () => {
 		const purchasePrice = Number(price);
 
+		if (!Number.isFinite(aladinItemId)) {
+			window.alert("음반 아이템 아이디가 올바르지 않습니다.");
+			return;
+		}
+
 		if (!Number.isFinite(purchasePrice) || purchasePrice < 0) {
 			window.alert("구매 가격을 올바르게 입력해 주세요.");
 			return;
@@ -92,7 +98,7 @@ const AddCollectionsPage = () => {
 			setIsSubmitting(true);
 
 			const data = await createCollection({
-				aladinItemId: record.id,
+				aladinItemId,
 				status: "OWNED",
 				condition: conditionMap[condition],
 				purchasePrice,
