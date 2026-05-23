@@ -307,27 +307,6 @@ const HomePage = () => {
     };
   }, []);
 
-  const hotContents = [
-    {
-      id: 1,
-      name: "이리떽",
-      title: "악뮤 (AKMU) · 정규 4집 개화",
-      excerpt: "좋음, 좋음, 좋음! 꼭 한번 들어보세요.",
-      likes: 1993,
-      comments: 20,
-      rating: 5,
-    },
-    {
-      id: 2,
-      name: "키키",
-      title: "리클 · 싱글 앨범",
-      excerpt: "앨범 전체가 가볍게 듣기 좋아요.",
-      likes: 37,
-      comments: 9,
-      rating: 4,
-    },
-  ];
-
   const artistNews = [
     {
       id: 1,
