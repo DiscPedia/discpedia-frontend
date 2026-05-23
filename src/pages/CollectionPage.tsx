@@ -100,7 +100,7 @@ const CollectionPage = () => {
     [counts],
   );
   return (
-    <div className="relative w-full flex-1 overflow-y-auto bg-[#f5f5f5] px-4 pb-24 pt-3">
+    <div className="relative w-full flex-1 overflow-y-auto scrollbar-hide bg-[#f5f5f5] px-4 pb-24 pt-3">
       <section className="rounded-2xl bg-[#EBEDF0] p-4">
         <p className="text-sm font-semibold text-gray-700">내 컬렉션 총 가치</p>
         <p className="mt-1 text-4xl font-black tracking-tight text-gray-900">

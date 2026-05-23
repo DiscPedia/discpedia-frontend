@@ -49,7 +49,9 @@ const Record = ({ item }: { item: RecordItem }) => {
               </p>
               <span className="text-xs text-gray-400">{item.date}</span>
             </div>
-            <p className="text-sm text-gray-500 mt-1">{item.subtitle}</p>
+            <p className="truncate text-sm text-gray-500 mt-1">
+              {item.subtitle}
+            </p>
           </div>
         </article>
       </button>

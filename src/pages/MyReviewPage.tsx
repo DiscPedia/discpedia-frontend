@@ -49,7 +49,7 @@ const MyReviewPage = () => {
           내 리뷰 모아보기
         </h1>
       </header>
-      <div className="flex-1 overflow-y-auto px-4 pb-8 pt-3">
+      <div className="flex-1 overflow-y-auto scrollbar-hide px-4 pb-8 pt-3">
         {loading && (
           <div className="rounded-2xl border border-gray-200 bg-white p-4 text-sm text-gray-500 shadow-sm shadow-gray-200/50">
             리뷰를 불러오는 중...
