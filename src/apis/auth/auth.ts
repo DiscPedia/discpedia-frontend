@@ -26,6 +26,8 @@ export async function startOAuthLogin(provider: OAuthProvider) {
   const res = (await call(
     `/api/v1/auth/oauth/${provider}/authorize`,
     "GET",
+    undefined,
+    { skipAuth: true }
   )) as ApiResponse<OAuthAuthorizeResponse>;
   sessionStorage.setItem(OAUTH_STATE_KEY, res.data.state);
   window.location.href = res.data.authorizationUrl;
@@ -44,7 +46,7 @@ export async function completeOAuthLogin(
     const res = (await call(`/api/v1/auth/oauth/${provider}/login`, "POST", {
       code,
       state,
-    })) as ApiResponse<OAuthLoginResponse>;
+    }, { skipAuth: true })) as ApiResponse<OAuthLoginResponse>;
     localStorage.setItem("accessToken", res.data.accessToken.token);
     sessionStorage.removeItem(OAUTH_STATE_KEY);
     return res.data;

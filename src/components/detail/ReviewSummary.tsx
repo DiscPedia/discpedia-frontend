@@ -2,9 +2,10 @@ interface Props {
   rating: number;
   totalReviews: number;
   distribution: { score: number; percent: number }[];
+  onWriteReview?: () => void;
 }
 
-const ReviewSummary = ({ rating, totalReviews, distribution }: Props) => {
+const ReviewSummary = ({ rating, totalReviews, distribution, onWriteReview }: Props) => {
   return (
     <section className="bg-white px-5 pb-5">
       <div className="flex items-center justify-between">
@@ -16,6 +17,7 @@ const ReviewSummary = ({ rating, totalReviews, distribution }: Props) => {
         <button
           type="button"
           className="text-xs text-blue-500 bg-blue-50 px-3 py-1 rounded-full"
+          onClick={onWriteReview}
         >
           리뷰 작성하기
         </button>

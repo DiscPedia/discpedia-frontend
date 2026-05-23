@@ -1,11 +1,15 @@
 import { API_BASE_URL } from "./api-config";
 
-export async function call(api: string, method: string, request?: unknown) {
+type CallOptions = {
+  skipAuth?: boolean;
+};
+
+export async function call(api: string, method: string, request?: unknown, option?: CallOptions,) {
   const accessToken = localStorage.getItem("accessToken");
 
   const headers = new Headers();
   headers.set("Content-Type", "application/json");
-  if (accessToken) {
+  if (accessToken && !option?.skipAuth) {
     headers.set("Authorization", `Bearer ${accessToken}`);
   }
 
