@@ -1,5 +1,5 @@
 import { call } from "../auth/ApiService";
-import type { ApiResponse, PageResponse } from "../commontype";
+import { unwrapPage, unwrapData } from "../apiResponse";
 
 /** GET /api/v1/artists — ArtistSearchItem */
 export type ArtistSearchItem = {
@@ -61,9 +61,10 @@ export const searchArtists = async (params?: {
   const res = (await call(
     `/api/v1/artists?${query.toString()}`,
     "GET",
-  )) as ApiResponse<PageResponse<ArtistSearchItem>>;
+  ));
+  const pageData = unwrapPage<ArtistSearchItem>(res);
 
-  return res.data.items.map(toArtist);
+  return pageData.items.map(toArtist);
 };
 
 /** 관심 아티스트 조회 */
@@ -71,9 +72,10 @@ export const getFavoriteArtists = async (): Promise<FavoriteArtist[]> => {
   const res = (await call(
     "/api/v1/me/favorite-artists",
     "GET",
-  )) as ApiResponse<FavoriteArtist[]>;
+  ));
+  const data = unwrapData<FavoriteArtist[]>(res);
 
-  return res.data;
+  return data;
 };
 
 /** 관심 아티스트 저장 */
@@ -90,9 +92,10 @@ export const updateFavoriteArtists = async (
     "/api/v1/me/favorite-artists",
     "PUT",
     body,
-  )) as ApiResponse<UpdateFavoriteArtistsResponse>;
+  ));
+  const data = unwrapData<UpdateFavoriteArtistsResponse>(res);
 
-  return res.data;
+  return data;
 };
 
 /** 기존 import 호환용 */
