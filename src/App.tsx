@@ -22,7 +22,7 @@ import WriteReviewPage from "./pages/WriteReviewPage";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to="/home" replace />,
+    element: <Navigate to="/login" replace />,
   },
   {
     path: "/login",
