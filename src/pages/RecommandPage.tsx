@@ -37,7 +37,7 @@ const RecommandPage = () => {
           searchArtists({ size: 100 }),
           getFavoriteArtists(),
         ]);
-
+        console.log(artistList)
         if (cancelled) return;
 
         setArtists(artistList);
