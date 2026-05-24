@@ -1,5 +1,4 @@
 import { call } from "../auth/ApiService";
-import type { ApiResponse, PageResponse } from "../commontype";
 import { unwrapPage, unwrapData } from "../apiResponse";
 
 /** GET /api/v1/artists — ArtistSearchItem */
