@@ -137,6 +137,12 @@ const DetailPage = () => {
     });
   };
 
+  const handleOpenProductUrl = () => {
+    if (!album?.productUrl) return;
+
+    window.open(album.productUrl, "_blank", "noopener,noreferrer");
+  };
+
   const handleToggleLike = async (review: ReviewItem) => {
     setReviews((prev) =>
       prev.map((item) =>
@@ -253,7 +259,10 @@ const DetailPage = () => {
     <main className="flex-1 w-full bg-[#F5F5F5] pb-24">
       <div className="relative">
         <AlbumHero coverAlt={album.title} coverImageUrl={album.coverImageUrl} />
-        <DetailHeader onBack={() => navigate(-1)} />
+        <DetailHeader
+          onBack={() => navigate(-1)}
+          onShare={handleOpenProductUrl}
+        />
       </div>
 
       <ProductInfo
