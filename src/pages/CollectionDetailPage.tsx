@@ -7,7 +7,7 @@ import dollarIcon from "../assets/dollar.svg";
 import calendarIcon from "../assets/calendar.svg";
 import storeIcon from "../assets/store.svg";
 import conditionIcon from "../assets/condition.svg";
-import backIcon from "../assets/backArrow.svg";
+import backArrow from "../assets/backArrow.svg";
 import { getHighQualityCoverUrl } from "../util/imageUtil";
 
 import {
@@ -98,7 +98,7 @@ const CollectionDetailPage = () => {
           onClick={() => navigate("/home")}
           className="text-sm font-medium text-gray-700"
         >
-          <img src={backIcon} alt="뒤로가기" className="h-5 w-5" />
+          <img src={backArrow} alt="" className="h-6 w-6" />
         </button>
         <div className="flex items-center gap-2">
           <button type="button" className="rounded-md p-2 hover:bg-gray-100">

@@ -1,3 +1,5 @@
+import backArrow from "../../assets/backArrow.svg";
+
 interface Props {
   onBack?: () => void;
   onLike?: () => void;
@@ -12,9 +14,9 @@ const DetailHeader = ({ onBack, onLike, onShare, liked = false }: Props) => {
         type="button"
         onClick={onBack}
         className="flex h-9 w-9 items-center justify-center rounded-full bg-white/70 backdrop-blur"
-        aria-label="back"
+        aria-label="뒤로 가기"
       >
-        <span className="text-lg">←</span>
+        <img src={backArrow} alt="" className="h-5 w-5" />
       </button>
       <div className="flex items-center gap-2">
         <button

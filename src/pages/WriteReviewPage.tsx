@@ -4,6 +4,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getAlbumDetail, type AlbumDetail } from "../apis/aladin";
 import { createReview } from "../apis/review";
 import { StarRatingInput } from "../components/common/StarRatingInput";
+import backArrow from "../assets/backArrow.svg";
 import { getHighQualityCoverUrl } from "../util/imageUtil";
 
 const WriteReviewPage = () => {
@@ -82,10 +83,10 @@ const WriteReviewPage = () => {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="absolute left-4 text-lg"
+          className="absolute left-4 p-1"
           aria-label="뒤로 가기"
         >
-          ←
+          <img src={backArrow} alt="" className="h-6 w-6" />
         </button>
         <h1 className="w-full text-center text-base font-semibold text-gray-900">
           리뷰 작성
