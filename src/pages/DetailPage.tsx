@@ -185,6 +185,8 @@ const DetailPage = () => {
         await createCollection({
           aladinItemId: album.aladinItemId,
           status: "WISHLIST",
+          condition: "NEW",
+          purchasePrice: album.priceSales,
         });
         setWishlistAlbumId(album.aladinItemId);
       }
