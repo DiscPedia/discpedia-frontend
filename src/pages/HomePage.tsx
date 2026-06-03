@@ -7,6 +7,7 @@ import {
   type UsedAlbum,
 } from "../apis/aladin";
 import { useNewReleases } from "../hooks/useNewReleases";
+import { getHighQualityCoverUrl } from "../util/imageUtil";
 
 const formatDate = (value: string) => value.replaceAll("-", ".");
 
@@ -41,7 +42,7 @@ const NewReleaseCard = ({ item, onClick }: NewReleaseCardProps) => {
       <div className="w-full aspect-square rounded-xl mt-3 bg-gray-100 overflow-hidden">
         {item.coverImageUrl ? (
           <img
-            src={item.coverImageUrl}
+            src={getHighQualityCoverUrl(item.coverImageUrl)}
             alt={item.title}
             className="h-full w-full object-cover"
             loading="lazy"
@@ -169,7 +170,7 @@ const UsedAlbumCard = ({ item, onClick }: UsedAlbumCardProps) => {
       <div className="w-full aspect-square rounded-xl mt-3 bg-gray-100 overflow-hidden">
         {item.coverImageUrl ? (
           <img
-            src={item.coverImageUrl}
+            src={getHighQualityCoverUrl(item.coverImageUrl)}
             alt={item.title}
             className="h-full w-full object-cover"
             loading="lazy"

@@ -17,6 +17,7 @@ import Login from "./components/common/Login";
 import MyReviewPage from "./pages/MyReviewPage";
 import PortfolioPage from "./pages/PortfolioPage";
 import CollectionDetailPage from "./pages/CollectionDetailPage";
+import EditReviewPage from "./pages/EditReviewPage";
 import WriteReviewPage from "./pages/WriteReviewPage";
 
 const router = createBrowserRouter([
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
   {
     path: "/review/write/:id",
     element: <WriteReviewPage />,
+  },
+  {
+    path: "/review/edit/:reviewId",
+    element: <EditReviewPage />,
   },
   {
     path: "/collection/add/:id",

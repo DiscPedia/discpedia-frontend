@@ -1,3 +1,5 @@
+import { getHighQualityCoverUrl } from "../../util/imageUtil";
+
 interface Props {
   coverAlt: string;
   coverImageUrl?: string;
@@ -9,7 +11,7 @@ const AlbumHero = ({ coverAlt, coverImageUrl }: Props) => {
       <div className="w-37.5 h-37.5 rounded-2xl bg-[#D8C7A9] shadow-xl flex items-center justify-center overflow-hidden">
         {coverImageUrl ? (
           <img
-            src={coverImageUrl}
+            src={getHighQualityCoverUrl(coverImageUrl)}
             alt={coverAlt}
             className="h-full w-full object-cover"
           />

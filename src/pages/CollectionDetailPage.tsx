@@ -8,6 +8,7 @@ import calendarIcon from "../assets/calendar.svg";
 import storeIcon from "../assets/store.svg";
 import conditionIcon from "../assets/condition.svg";
 import backIcon from "../assets/backArrow.svg";
+import { getHighQualityCoverUrl } from "../util/imageUtil";
 
 import {
   deleteCollection,
@@ -136,7 +137,7 @@ const CollectionDetailPage = () => {
           <div className="space-y-3">
             <section className="rounded-2xl border border-gray-200 bg-white p-3">
               <img
-                src={item.album.coverImageUrl}
+                src={getHighQualityCoverUrl(item.album.coverImageUrl)}
                 alt={item.album.title}
                 className="w-full h-auto rounded-xl object-contain"
               />
