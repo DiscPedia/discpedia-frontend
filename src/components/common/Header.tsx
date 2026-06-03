@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/common/Logo.svg";
 
+
 const Header = () => {
   const navigate = useNavigate();
 
@@ -13,9 +14,9 @@ const Header = () => {
             type="button"
             onClick={() => navigate("/home", { replace: true })}
           >
-            <h1 className="font-['Cormorant_Garamond'] text-[38px] font-bold leading-none">
-              <span className="text-[#D57200] italic">Disc </span>
-              <span className="text-[#111111] not-italic">Pedia</span>
+            <h1 className="font-['Raleway'] text-[38px] leading-none tracking-tight">
+              <span className="text-[#FFD700] font-light">Disc</span>
+              <span className="text-[#111111] font-light">Pedia</span>
             </h1>
           </button>
         </div>
