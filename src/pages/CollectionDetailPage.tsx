@@ -95,7 +95,7 @@ const CollectionDetailPage = () => {
       <header className="relative flex h-14 shrink-0 items-center justify-between border-b border-gray-200 bg-white px-4">
         <button
           type="button"
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/home")}
           className="text-sm font-medium text-gray-700"
         >
           <img src={backIcon} alt="뒤로가기" className="h-5 w-5" />

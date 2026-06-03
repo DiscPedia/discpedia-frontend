@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/common/Logo.svg";
-
+import AlarmIcon from "../../assets/alarm.svg";
+import SettingIcon from "../../assets/setting.svg";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -23,18 +24,18 @@ const Header = () => {
         <div className="flex items-center gap-2 pr-2">
           <button
             type="button"
-            className="flex h-9 w-9 items-center justify-center rounded-full text-xl hover:bg-gray-100"
+            className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-gray-100"
             aria-label="notification"
           >
-            {"\u{1F514}"}
+            <img src={AlarmIcon} alt="alarm" />
           </button>
           <button
             type="button"
             onClick={() => navigate("/myPage")}
-            className="flex h-9 w-9 items-center justify-center rounded-full text-xl hover:bg-gray-100"
+            className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-gray-100"
             aria-label="settings"
           >
-            {"\u2699\uFE0F"}
+            <img src={SettingIcon} alt="settings" />
           </button>
         </div>
       </div>
