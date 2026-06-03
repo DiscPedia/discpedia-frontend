@@ -4,8 +4,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getAlbumDetail, type AlbumDetail } from "../apis/aladin";
 import {
   getAlbumReviews,
+  deleteReview,
   likeReview,
   unlikeReview,
+  updateReview,
   type ReviewItem,
 } from "../apis/review";
 import AlbumHero from "../components/detail/AlbumHero";
@@ -175,6 +177,65 @@ const DetailPage = () => {
     }
   };
 
+  const handleEditReview = async (review: ReviewItem) => {
+    const ratingInput = window.prompt(
+      "별점을 입력해 주세요. (0.5~5)",
+      String(review.rating),
+    );
+    if (ratingInput === null) return;
+
+    const nextRating = Number(ratingInput);
+    if (!Number.isFinite(nextRating) || nextRating < 0.5 || nextRating > 5) {
+      window.alert("별점은 0.5 이상 5 이하로 입력해 주세요.");
+      return;
+    }
+
+    const nextContent = window.prompt("리뷰 내용을 입력해 주세요.", review.content);
+    if (nextContent === null) return;
+
+    const content = nextContent.trim();
+    if (!content) {
+      window.alert("리뷰 내용을 입력해 주세요.");
+      return;
+    }
+
+    try {
+      const data = await updateReview(review.reviewId, {
+        rating: nextRating,
+        content,
+      });
+
+      setReviews((prev) =>
+        prev.map((item) =>
+          item.reviewId === data.reviewId
+            ? {
+                ...item,
+                rating: data.rating,
+                content: data.content,
+                createdAt: data.createdAt,
+              }
+            : item,
+        ),
+      );
+    } catch {
+      window.alert("리뷰 수정에 실패했습니다.");
+    }
+  };
+
+  const handleDeleteReview = async (review: ReviewItem) => {
+    const ok = window.confirm("리뷰를 삭제하시겠습니까?");
+    if (!ok) return;
+
+    try {
+      await deleteReview(review.reviewId);
+      setReviews((prev) =>
+        prev.filter((item) => item.reviewId !== review.reviewId),
+      );
+    } catch {
+      window.alert("리뷰 삭제에 실패했습니다.");
+    }
+  };
+
   if (invalidAlbumId || error) {
     return (
       <main className="flex-1 w-full bg-[#F5F5F5]">
@@ -253,6 +314,8 @@ const DetailPage = () => {
         loading={reviewsLoading}
         error={reviewsError}
         onToggleLike={handleToggleLike}
+        onEdit={handleEditReview}
+        onDelete={handleDeleteReview}
       />
       <BottomCTA label="내 컬렉션에 추가하기" onClick={handleAddCollection} />
     </main>
