@@ -3,7 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { getAlbumDetail, type AlbumDetail } from "../apis/aladin";
 import {
+  createCollection,
+  deleteWishlist,
+  getCollectionItems,
+} from "../apis/collection/collection";
+import {
   getAlbumReviews,
+  deleteReview,
   likeReview,
   unlikeReview,
   type ReviewItem,
@@ -48,6 +54,9 @@ const DetailPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [reviewsLoading, setReviewsLoading] = useState(true);
   const [reviewsError, setReviewsError] = useState<string | null>(null);
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [wishlistAlbumId, setWishlistAlbumId] = useState<number | null>(null);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
 
   useEffect(() => {
     if (invalidAlbumId) {
@@ -63,18 +72,28 @@ const DetailPage = () => {
         setReviewsLoading(true);
         setReviewsError(null);
 
-        const [albumData, reviewData] = await Promise.all([
+        const [albumData, reviewData, wishlistData] = await Promise.all([
           getAlbumDetail(aladinItemId),
           getAlbumReviews(aladinItemId, {
             sort: "LATEST",
             page: 0,
             size: 20,
           }),
+          getCollectionItems({
+            status: "WISHLIST",
+            page: 0,
+            size: 100,
+          }),
         ]);
 
         if (!ignore) {
+          const wishlistItem = wishlistData.items.find(
+            (item) => item.album.albumId === albumData.aladinItemId,
+          );
           setAlbum(albumData);
           setReviews(reviewData.items);
+          setIsWishlisted(Boolean(wishlistItem));
+          setWishlistAlbumId(wishlistItem?.album.albumId ?? null);
         }
       } catch {
         if (!ignore) {
@@ -136,6 +155,54 @@ const DetailPage = () => {
     });
   };
 
+  const handleOpenProductUrl = () => {
+    if (!album?.productUrl) return;
+
+    window.open(album.productUrl, "_blank", "noopener,noreferrer");
+  };
+
+  const handleToggleWishlist = async () => {
+    if (!album || wishlistLoading) return;
+
+    const ok = window.confirm(
+      isWishlisted
+        ? "위시리스트에서 삭제하시겠습니까?"
+        : "위시리스트에 등록하시겠습니까?",
+    );
+    if (!ok) return;
+
+    const previousIsWishlisted = isWishlisted;
+    const previousWishlistAlbumId = wishlistAlbumId;
+
+    try {
+      setWishlistLoading(true);
+      setIsWishlisted(!isWishlisted);
+
+      if (isWishlisted) {
+        await deleteWishlist(wishlistAlbumId ?? album.aladinItemId);
+        setWishlistAlbumId(null);
+      } else {
+        await createCollection({
+          aladinItemId: album.aladinItemId,
+          status: "WISHLIST",
+          condition: "NEW",
+          purchasePrice: album.priceSales,
+        });
+        setWishlistAlbumId(album.aladinItemId);
+      }
+    } catch {
+      setIsWishlisted(previousIsWishlisted);
+      setWishlistAlbumId(previousWishlistAlbumId);
+      window.alert(
+        previousIsWishlisted
+          ? "위시리스트 삭제에 실패했습니다."
+          : "위시리스트 등록에 실패했습니다.",
+      );
+    } finally {
+      setWishlistLoading(false);
+    }
+  };
+
   const handleToggleLike = async (review: ReviewItem) => {
     setReviews((prev) =>
       prev.map((item) =>
@@ -172,6 +239,32 @@ const DetailPage = () => {
         prev.map((item) => (item.reviewId === review.reviewId ? review : item)),
       );
       window.alert("좋아요 처리에 실패했습니다.");
+    }
+  };
+
+  const handleEditReview = (review: ReviewItem) => {
+    if (!album) return;
+
+    navigate(`/review/edit/${review.reviewId}`, {
+      state: {
+        album,
+        review,
+        returnTo: `/detail/${album.aladinItemId}`,
+      },
+    });
+  };
+
+  const handleDeleteReview = async (review: ReviewItem) => {
+    const ok = window.confirm("리뷰를 삭제하시겠습니까?");
+    if (!ok) return;
+
+    try {
+      await deleteReview(review.reviewId);
+      setReviews((prev) =>
+        prev.filter((item) => item.reviewId !== review.reviewId),
+      );
+    } catch {
+      window.alert("리뷰 삭제에 실패했습니다.");
     }
   };
 
@@ -226,7 +319,12 @@ const DetailPage = () => {
     <main className="flex-1 w-full bg-[#F5F5F5] pb-24">
       <div className="relative">
         <AlbumHero coverAlt={album.title} coverImageUrl={album.coverImageUrl} />
-        <DetailHeader onBack={() => navigate(-1)} />
+        <DetailHeader
+          onBack={() => navigate(-1)}
+          onLike={handleToggleWishlist}
+          onShare={handleOpenProductUrl}
+          liked={isWishlisted}
+        />
       </div>
 
       <ProductInfo
@@ -253,6 +351,8 @@ const DetailPage = () => {
         loading={reviewsLoading}
         error={reviewsError}
         onToggleLike={handleToggleLike}
+        onEdit={handleEditReview}
+        onDelete={handleDeleteReview}
       />
       <BottomCTA label="내 컬렉션에 추가하기" onClick={handleAddCollection} />
     </main>

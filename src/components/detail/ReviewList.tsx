@@ -5,6 +5,8 @@ interface Props {
   loading?: boolean;
   error?: string | null;
   onToggleLike?: (review: ReviewItem) => void;
+  onEdit?: (review: ReviewItem) => void;
+  onDelete?: (review: ReviewItem) => void;
 }
 
 const formatDate = (value: string) => value.split("T")[0]?.replaceAll("-", ".") ?? value;
@@ -14,6 +16,8 @@ const ReviewList = ({
   loading = false,
   error = null,
   onToggleLike,
+  onEdit,
+  onDelete,
 }: Props) => {
   return (
     <section className="bg-white px-5 pb-24">
@@ -70,16 +74,32 @@ const ReviewList = ({
               </p>
               <div className="mt-3 flex items-center justify-between text-xs text-gray-400">
                 <span>{formatDate(item.createdAt)}</span>
-                <button
-                  type="button"
-                  onClick={() => onToggleLike?.(item)}
-                  className={`font-medium ${
-                    item.likedByMe ? "text-red-500" : "text-gray-400"
-                  }`}
-                  aria-label={item.likedByMe ? "좋아요 취소" : "좋아요"}
-                >
-                  {item.likedByMe ? "♥" : "♡"} {item.likeCount}
-                </button>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => onToggleLike?.(item)}
+                    className={`font-medium ${
+                      item.likedByMe ? "text-red-500" : "text-gray-400"
+                    }`}
+                    aria-label={item.likedByMe ? "좋아요 취소" : "좋아요"}
+                  >
+                    {item.likedByMe ? "♥" : "♡"} {item.likeCount}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onEdit?.(item)}
+                    className="font-medium text-gray-500"
+                  >
+                    수정
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onDelete?.(item)}
+                    className="font-medium text-red-400"
+                  >
+                    삭제
+                  </button>
+                </div>
               </div>
             </article>
           ))}

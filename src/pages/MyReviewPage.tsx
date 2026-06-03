@@ -6,7 +6,9 @@ import trashIcon from "../assets/trashCan.svg";
 import writeIcon from "../assets/write.svg";
 
 import { getMyReviews, type MyReviewItem } from "../apis/mypage/myreview";
+import { deleteReview } from "../apis/review";
 import { StarRow } from "../components/common/StarRow";
+import { getHighQualityCoverUrl } from "../util/imageUtil";
 
 const MyReviewPage = () => {
   const [items, setItems] = useState<MyReviewItem[]>([]);
@@ -33,6 +35,39 @@ const MyReviewPage = () => {
       cancelled = true;
     };
   }, []);
+
+  const handleEditReview = (item: MyReviewItem) => {
+    navigate(`/review/edit/${item.reviewId}`, {
+      state: {
+        album: {
+          aladinItemId: item.album.albumId,
+          title: item.album.albumName,
+          artistName: item.album.artistName,
+          coverImageUrl: item.album.coverImageUrl,
+        },
+        review: {
+          reviewId: item.reviewId,
+          rating: item.rating,
+          content: item.content,
+        },
+        returnTo: "/myReview",
+      },
+    });
+  };
+
+  const handleDeleteReview = async (item: MyReviewItem) => {
+    const ok = window.confirm("리뷰를 삭제하시겠습니까?");
+    if (!ok) return;
+
+    try {
+      await deleteReview(item.reviewId);
+      setItems((prev) =>
+        prev.filter((review) => review.reviewId !== item.reviewId),
+      );
+    } catch {
+      window.alert("리뷰 삭제에 실패했습니다.");
+    }
+  };
 
   return (
     <div className="flex min-h-dvh w-full flex-col bg-[#f5f5f5]">
@@ -74,7 +109,7 @@ const MyReviewPage = () => {
             >
               <div className="flex gap-3">
                 <img
-                  src={item.album.coverImageUrl}
+                  src={getHighQualityCoverUrl(item.album.coverImageUrl)}
                   alt=""
                   className="h-[72px] w-[72px] shrink-0 rounded-xl object-cover"
                 />
@@ -89,6 +124,7 @@ const MyReviewPage = () => {
                 <div className="flex shrink-0 gap-1 self-start pt-0.5">
                   <button
                     type="button"
+                    onClick={() => handleEditReview(item)}
                     className="rounded-lg p-1.5 text-gray-600 hover:bg-gray-100"
                     aria-label="리뷰 수정"
                   >
@@ -96,6 +132,7 @@ const MyReviewPage = () => {
                   </button>
                   <button
                     type="button"
+                    onClick={() => handleDeleteReview(item)}
                     className="rounded-lg p-1.5 text-gray-600 hover:bg-gray-100"
                     aria-label="리뷰 삭제"
                   >

@@ -4,6 +4,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getAlbumDetail, type AlbumDetail } from "../apis/aladin";
 import { createReview } from "../apis/review";
 import { StarRatingInput } from "../components/common/StarRatingInput";
+import { getHighQualityCoverUrl } from "../util/imageUtil";
 
 const WriteReviewPage = () => {
   const navigate = useNavigate();
@@ -105,7 +106,7 @@ const WriteReviewPage = () => {
         <div className="w-24 h-24 rounded-2xl bg-gray-200 flex items-center justify-center overflow-hidden">
           {album?.coverImageUrl ? (
             <img
-              src={album.coverImageUrl}
+              src={getHighQualityCoverUrl(album.coverImageUrl)}
               alt={album.title}
               className="h-full w-full object-cover"
             />

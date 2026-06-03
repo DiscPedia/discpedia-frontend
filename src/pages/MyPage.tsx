@@ -21,6 +21,12 @@ const MyPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
+  const displayName =
+    me?.nickname?.trim() ||
+    me?.userName?.trim() ||
+    me?.username?.trim() ||
+    me?.name?.trim() ||
+    "사용자";
 
   const handleLogout = async () => {
     const ok = window.confirm("로그아웃 하시겠습니까?");
@@ -61,9 +67,24 @@ const MyPage = () => {
 
   const statItems = useMemo(
     () => [
-      { icon: collectionIcon, n: stats?.collectionCount ?? 0, label: "컬렉션" },
-      { icon: likeIcon, n: stats?.wishlistCount ?? 0, label: "위시리스트" },
-      { icon: reviewIcon, n: stats?.reviewCount ?? 0, label: "작성 리뷰" },
+      {
+        icon: collectionIcon,
+        n: stats?.collectionCount ?? 0,
+        label: "컬렉션",
+        path: "/collection",
+      },
+      {
+        icon: likeIcon,
+        n: stats?.wishlistCount ?? 0,
+        label: "위시리스트",
+        path: "/collection?tab=WISHLIST",
+      },
+      {
+        icon: reviewIcon,
+        n: stats?.reviewCount ?? 0,
+        label: "작성 리뷰",
+        path: "/myReview",
+      },
     ],
     [stats],
   );
@@ -98,7 +119,7 @@ const MyPage = () => {
           className="h-14 w-14 shrink-0 rounded-full object-cover"
         />
         <div className="min-w-0 flex-1">
-          <p className="font-semibold text-gray-900">{me?.name ?? "사용자"}</p>
+          <p className="font-semibold text-gray-900">{displayName}</p>
           <p className="text-sm text-gray-500">{me?.email ?? ""}</p>
           {me?.provider ? (
             <p className="text-xs text-gray-400">로그인: {me.provider}</p>
@@ -115,14 +136,16 @@ const MyPage = () => {
       {/* 통계 */}
       <div className="mb-3 grid grid-cols-3 gap-2">
         {statItems.map((item) => (
-          <div
+          <button
+            type="button"
             key={item.label}
+            onClick={() => navigate(item.path)}
             className="flex flex-col items-center rounded-2xl border border-gray-200 bg-white py-4 shadow-sm shadow-gray-200/50"
           >
             <img src={item.icon} alt="" className="mb-2 h-8 w-8" />
             <p className="text-lg font-bold text-gray-900">{item.n}</p>
             <p className="text-xs text-gray-500">{item.label}</p>
-          </div>
+          </button>
         ))}
       </div>
       {/* 메뉴 */}

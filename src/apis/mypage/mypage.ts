@@ -4,10 +4,13 @@ import type { ApiResponse, PageResponse } from "../commontype";
 /** GET /api/v1/me — UserProfileResponse */
 export type Me = {
   subject: string;
-  name: string;
-  email: string;
-  provider: string;
-  providerId: string;
+  name?: string;
+  nickname?: string;
+  userName?: string;
+  username?: string;
+  email?: string;
+  provider?: string;
+  providerId?: string;
 };
 
 export type MyPageStats = {

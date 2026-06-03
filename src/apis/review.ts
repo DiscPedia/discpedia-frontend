@@ -105,3 +105,20 @@ export const unlikeReview = async (
 
   return res.data;
 };
+
+export const updateReview = async (
+  reviewId: number,
+  request: CreateReviewRequest,
+): Promise<ReviewMutationResponse> => {
+  const res = (await call(
+    `/api/v1/reviews/${reviewId}`,
+    "PATCH",
+    request,
+  )) as ApiResponse<ReviewMutationResponse>;
+
+  return res.data;
+};
+
+export const deleteReview = async (reviewId: number): Promise<void> => {
+  await call(`/api/v1/reviews/${reviewId}`, "DELETE");
+};
