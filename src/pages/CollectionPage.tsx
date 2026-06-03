@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   getCollectionItems,
   getCollectionSummary,
@@ -11,14 +11,17 @@ type FilterTab = "ALL" | "LP" | "CD" | "WISHLIST";
 const formatWon = (value: number) => `₩${value.toLocaleString("ko-KR")}`;
 
 const CollectionPage = () => {
+  const [searchParams] = useSearchParams();
+  const initialTab =
+    searchParams.get("tab") === "WISHLIST" ? "WISHLIST" : "ALL";
   const [summaryValue, setSummaryValue] = useState(0);
   const [counts, setCounts] = useState({ lp: 0, cd: 0, wishlist: 0 });
-  const [activeTab, setActiveTab] = useState<FilterTab>("ALL");
+  const [activeTab, setActiveTab] = useState<FilterTab>(initialTab);
   const [items, setItems] = useState<CollectionItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     let cancelled = false;
     const load = async () => {
