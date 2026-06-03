@@ -21,6 +21,12 @@ const MyPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const navigate = useNavigate();
+  const displayName =
+    me?.nickname?.trim() ||
+    me?.userName?.trim() ||
+    me?.username?.trim() ||
+    me?.name?.trim() ||
+    "사용자";
 
   const handleLogout = async () => {
     const ok = window.confirm("로그아웃 하시겠습니까?");
@@ -113,7 +119,7 @@ const MyPage = () => {
           className="h-14 w-14 shrink-0 rounded-full object-cover"
         />
         <div className="min-w-0 flex-1">
-          <p className="font-semibold text-gray-900">{me?.name ?? "사용자"}</p>
+          <p className="font-semibold text-gray-900">{displayName}</p>
           <p className="text-sm text-gray-500">{me?.email ?? ""}</p>
           {me?.provider ? (
             <p className="text-xs text-gray-400">로그인: {me.provider}</p>
