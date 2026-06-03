@@ -7,7 +7,6 @@ import {
   deleteReview,
   likeReview,
   unlikeReview,
-  updateReview,
   type ReviewItem,
 } from "../apis/review";
 import AlbumHero from "../components/detail/AlbumHero";
@@ -177,49 +176,16 @@ const DetailPage = () => {
     }
   };
 
-  const handleEditReview = async (review: ReviewItem) => {
-    const ratingInput = window.prompt(
-      "별점을 입력해 주세요. (0.5~5)",
-      String(review.rating),
-    );
-    if (ratingInput === null) return;
+  const handleEditReview = (review: ReviewItem) => {
+    if (!album) return;
 
-    const nextRating = Number(ratingInput);
-    if (!Number.isFinite(nextRating) || nextRating < 0.5 || nextRating > 5) {
-      window.alert("별점은 0.5 이상 5 이하로 입력해 주세요.");
-      return;
-    }
-
-    const nextContent = window.prompt("리뷰 내용을 입력해 주세요.", review.content);
-    if (nextContent === null) return;
-
-    const content = nextContent.trim();
-    if (!content) {
-      window.alert("리뷰 내용을 입력해 주세요.");
-      return;
-    }
-
-    try {
-      const data = await updateReview(review.reviewId, {
-        rating: nextRating,
-        content,
-      });
-
-      setReviews((prev) =>
-        prev.map((item) =>
-          item.reviewId === data.reviewId
-            ? {
-                ...item,
-                rating: data.rating,
-                content: data.content,
-                createdAt: data.createdAt,
-              }
-            : item,
-        ),
-      );
-    } catch {
-      window.alert("리뷰 수정에 실패했습니다.");
-    }
+    navigate(`/review/edit/${review.reviewId}`, {
+      state: {
+        album,
+        review,
+        returnTo: `/detail/${album.aladinItemId}`,
+      },
+    });
   };
 
   const handleDeleteReview = async (review: ReviewItem) => {

@@ -20,6 +20,7 @@ export type MyReviewApiItem = {
 export type MyReviewItem = {
   reviewId: number;
   album: {
+    albumId: number;
     coverImageUrl: string;
     albumName: string;
     artistName: string;
@@ -41,6 +42,7 @@ const formatReviewDate = (iso: string) => {
 const toMyReviewItem = (item: MyReviewApiItem): MyReviewItem => ({
   reviewId: item.reviewId,
   album: {
+    albumId: item.album.albumId,
     coverImageUrl: item.album.coverImageUrl,
     albumName: item.album.title,
     artistName: item.album.artistName,
