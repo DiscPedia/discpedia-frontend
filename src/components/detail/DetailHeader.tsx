@@ -2,15 +2,17 @@ interface Props {
   onBack?: () => void;
   onLike?: () => void;
   onShare?: () => void;
+  liked?: boolean;
 }
 
-const DetailHeader = ({ onBack, onLike, onShare }: Props) => {
+const DetailHeader = ({ onBack, onLike, onShare, liked = false }: Props) => {
   return (
-    <div className="absolute top-4 left-0 right-0 px-4 flex items-center justify-between">
+    <div className="absolute left-0 right-0 top-4 flex items-center justify-between px-4">
       <button
         type="button"
         onClick={onBack}
-        className="w-9 h-9 rounded-full bg-white/70 backdrop-blur flex items-center justify-center"
+        className="flex h-9 w-9 items-center justify-center rounded-full bg-white/70 backdrop-blur"
+        aria-label="back"
       >
         <span className="text-lg">←</span>
       </button>
@@ -18,14 +20,18 @@ const DetailHeader = ({ onBack, onLike, onShare }: Props) => {
         <button
           type="button"
           onClick={onLike}
-          className="w-9 h-9 rounded-full bg-white/70 backdrop-blur flex items-center justify-center"
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-white/70 backdrop-blur"
+          aria-label={liked ? "remove from wishlist" : "add to wishlist"}
         >
-          <span className="text-lg">♡</span>
+          <span className={`text-lg ${liked ? "text-red-500" : "text-gray-900"}`}>
+            {liked ? "♥" : "♡"}
+          </span>
         </button>
         <button
           type="button"
           onClick={onShare}
-          className="w-9 h-9 rounded-full bg-white/70 backdrop-blur flex items-center justify-center"
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-white/70 backdrop-blur"
+          aria-label="open product page"
         >
           <span className="text-lg">↗</span>
         </button>

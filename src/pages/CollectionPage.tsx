@@ -5,6 +5,7 @@ import {
   getCollectionSummary,
   type CollectionItem,
 } from "../apis/collection/collection";
+import { getHighQualityCoverUrl } from "../util/imageUtil";
 
 type FilterTab = "ALL" | "LP" | "CD" | "WISHLIST";
 
@@ -172,7 +173,7 @@ const CollectionPage = () => {
             >
               <div className="flex flex-col gap-3">
                 <img
-                  src={item.album.coverImageUrl}
+                  src={getHighQualityCoverUrl(item.album.coverImageUrl)}
                   alt={item.album.title}
                   className="h-[92px] w-[92px] rounded-xl object-cover"
                 />

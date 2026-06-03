@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { getHighQualityCoverUrl } from "../../util/imageUtil";
 type RecordItem = {
   id: number;
   label: string;
@@ -25,7 +26,7 @@ const Record = ({ item }: { item: RecordItem }) => {
           <div className="relative aspect-square bg-gray-100">
             {item.coverImageUrl ? (
               <img
-                src={item.coverImageUrl}
+                src={getHighQualityCoverUrl(item.coverImageUrl)}
                 alt={item.title}
                 className="h-full w-full object-cover"
                 loading="lazy"

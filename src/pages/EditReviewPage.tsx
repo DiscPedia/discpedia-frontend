@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { updateReview } from "../apis/review";
 import { StarRatingInput } from "../components/common/StarRatingInput";
+import { getHighQualityCoverUrl } from "../util/imageUtil";
 
 type EditReviewAlbumState = {
   aladinItemId?: number;
@@ -95,7 +96,7 @@ const EditReviewPage = () => {
         <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-2xl bg-gray-200">
           {album?.coverImageUrl ? (
             <img
-              src={album.coverImageUrl}
+              src={getHighQualityCoverUrl(album.coverImageUrl)}
               alt={album.title ?? "앨범 커버"}
               className="h-full w-full object-cover"
             />

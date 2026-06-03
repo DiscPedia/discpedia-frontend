@@ -8,6 +8,7 @@ import writeIcon from "../assets/write.svg";
 import { getMyReviews, type MyReviewItem } from "../apis/mypage/myreview";
 import { deleteReview } from "../apis/review";
 import { StarRow } from "../components/common/StarRow";
+import { getHighQualityCoverUrl } from "../util/imageUtil";
 
 const MyReviewPage = () => {
   const [items, setItems] = useState<MyReviewItem[]>([]);
@@ -108,7 +109,7 @@ const MyReviewPage = () => {
             >
               <div className="flex gap-3">
                 <img
-                  src={item.album.coverImageUrl}
+                  src={getHighQualityCoverUrl(item.album.coverImageUrl)}
                   alt=""
                   className="h-[72px] w-[72px] shrink-0 rounded-xl object-cover"
                 />

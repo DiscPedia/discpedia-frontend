@@ -186,3 +186,8 @@ export const deleteCollection = async (
 ): Promise<void> => {
   await call(`${COLLECTIONS_BASE}/${collectionItemId}`, "DELETE");
 };
+
+/** DELETE /api/v1/albums/{albumId}/wishlist */
+export const deleteWishlist = async (albumId: number): Promise<void> => {
+  await call(`/api/v1/albums/${albumId}/wishlist`, "DELETE");
+};
