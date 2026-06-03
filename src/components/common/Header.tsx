@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/common/Logo.svg";
-import AlarmIcon from "../../assets/alarm.svg";
-import SettingIcon from "../../assets/setting.svg";
+
 
 const Header = () => {
   const navigate = useNavigate();
