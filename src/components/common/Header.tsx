@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/common/Logo.svg";
+import AlarmIcon from "../../assets/alarm.svg";
+import SettingIcon from "../../assets/setting.svg";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -12,15 +14,15 @@ const Header = () => {
             type="button"
             onClick={() => navigate("/home", { replace: true })}
           >
-            <h1 className="font-['Cormorant_Garamond'] text-[38px] font-bold leading-none">
-              <span className="text-[#D57200] italic">Disc </span>
-              <span className="text-[#111111] not-italic">Pedia</span>
+            <h1 className="font-['Raleway'] text-[38px] leading-none tracking-tight">
+              <span className="text-[#FFD700] font-light">Disc</span>
+              <span className="text-[#111111] font-light">Pedia</span>
             </h1>
           </button> 
         </div>
         <div className="flex items-center gap-2 pr-2">
-          <p>알림</p>
-          <p>설정</p>
+          <img src={AlarmIcon} alt="알림" />
+          <img src={SettingIcon} alt="설정" />
         </div>
       </div>
     </div>
