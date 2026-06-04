@@ -94,7 +94,7 @@ const NewReleaseSection = ({
         <button
           type="button"
           onClick={onViewAll}
-          className="text-sm text-gray-400"
+          className="text-sm text-gray-400 cursor-pointer"
         >
           전체보기
         </button>
@@ -225,7 +225,7 @@ const UsedAlbumSection = ({
         <button
           type="button"
           onClick={onViewAll}
-          className="text-sm text-gray-400"
+          className="text-sm text-gray-400 cursor-pointer"
         >
           더보기
         </button>

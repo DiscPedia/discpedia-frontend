@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { getUsedAlbums, type UsedAlbum } from "../apis/aladin";
 import Record from "../components/common/Record";
@@ -14,6 +15,7 @@ const toRecordItem = (item: UsedAlbum) => ({
 });
 
 const UsedAlbumsPage = () => {
+  const navigate = useNavigate();
   const [items, setItems] = useState<UsedAlbum[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -53,7 +55,17 @@ const UsedAlbumsPage = () => {
   return (
     <main className="flex-1 w-full overflow-y-auto scrollbar-hide bg-[#F5F5F5]">
       <div className="flex flex-col gap-6 px-4 pb-10 pt-4">
-        <div className="pl-3 text-2xl font-bold">중고 거래 음반</div>
+        <header className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-white text-lg shadow-sm"
+            aria-label="뒤로가기"
+          >
+            ←
+          </button>
+          <h1 className="text-2xl font-bold">중고 거래 음반</h1>
+        </header>
         {loading && (
           <section className="grid grid-cols-2 gap-6">
             {Array.from({ length: 8 }).map((_, index) => (

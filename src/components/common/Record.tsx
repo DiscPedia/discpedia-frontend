@@ -20,7 +20,7 @@ const Record = ({ item }: { item: RecordItem }) => {
         onClick={() =>
           navigate(`/detail/${item.id}`, { state: { record: item } })
         }
-        className="text-left"
+        className="cursor-pointer text-left"
       >
         <article className="bg-white rounded-3xl border border-gray-100 shadow-md overflow-hidden">
           <div className="relative aspect-square bg-gray-100">
