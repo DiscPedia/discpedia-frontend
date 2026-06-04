@@ -15,21 +15,26 @@ const defaultState: NewReleaseState = {
 };
 
 let cachedItems: NewRelease[] | null = null;
+let cachedSize = 0;
 let pendingRequest: Promise<NewRelease[]> | null = null;
+let pendingSize = 0;
 
 const fetchNewReleaseItems = async (size: number) => {
-  if (cachedItems) {
+  if (cachedItems && cachedSize >= size) {
     return cachedItems;
   }
 
-  if (!pendingRequest) {
+  if (!pendingRequest || pendingSize < size) {
+    pendingSize = size;
     pendingRequest = getNewReleases({ page: 0, size })
       .then((data) => {
         cachedItems = data.items;
+        cachedSize = size;
         return data.items;
       })
       .finally(() => {
         pendingRequest = null;
+        pendingSize = 0;
       });
   }
 
@@ -40,7 +45,7 @@ export const useNewReleases = (size = 20): NewReleaseState => {
   const [state, setState] = useState<NewReleaseState>(() => {
     if (cachedItems) {
       return {
-        items: cachedItems,
+        items: cachedSize >= size ? cachedItems : [],
         loading: false,
         error: null,
       };
@@ -56,7 +61,7 @@ export const useNewReleases = (size = 20): NewReleaseState => {
       try {
         setState((prev) => ({
           ...prev,
-          loading: !cachedItems,
+          loading: !cachedItems || cachedSize < size,
           error: null,
         }));
 

@@ -6,6 +6,7 @@ import {
 
 import BackgroundPage from "./pages/BackgroundPage";
 import HomePage from "./pages/HomePage";
+import NewReleasesPage from "./pages/NewReleasesPage";
 import SearchPage from "./pages/SearchPage";
 import CollectionPage from "./pages/CollectionPage";
 import MyPage from "./pages/MyPage";
@@ -73,6 +74,7 @@ const router = createBrowserRouter([
     element: <BackgroundPage />,
     children: [
       { path: "home", element: <HomePage /> },
+      { path: "new-releases", element: <NewReleasesPage /> },
       { path: "search", element: <SearchPage /> },
       { path: "collection", element: <CollectionPage /> },
       { path: "myPage", element: <MyPage /> },

@@ -72,6 +72,7 @@ type NewReleaseSectionProps = {
   loading: boolean;
   error: string | null;
   onItemClick: (aladinItemId: number) => void;
+  onViewAll: () => void;
 };
 
 const NewReleaseSection = ({
@@ -79,6 +80,7 @@ const NewReleaseSection = ({
   loading,
   error,
   onItemClick,
+  onViewAll,
 }: NewReleaseSectionProps) => {
   return (
     <section className="w-full flex flex-col gap-3">
@@ -89,7 +91,11 @@ const NewReleaseSection = ({
           </span>
           <h2 className="text-lg font-semibold text-gray-900">새로 나온 음반</h2>
         </div>
-        <button type="button" className="text-sm text-gray-400">
+        <button
+          type="button"
+          onClick={onViewAll}
+          className="text-sm text-gray-400"
+        >
           전체보기
         </button>
       </div>
@@ -343,6 +349,7 @@ const HomePage = () => {
           loading={newReleasesLoading}
           error={newReleasesError}
           onItemClick={(aladinItemId) => navigate(`/detail/${aladinItemId}`)}
+          onViewAll={() => navigate("/new-releases")}
         />
 
         <UsedAlbumSection
