@@ -72,6 +72,7 @@ type NewReleaseSectionProps = {
   loading: boolean;
   error: string | null;
   onItemClick: (aladinItemId: number) => void;
+  onViewAll: () => void;
 };
 
 const NewReleaseSection = ({
@@ -79,6 +80,7 @@ const NewReleaseSection = ({
   loading,
   error,
   onItemClick,
+  onViewAll,
 }: NewReleaseSectionProps) => {
   return (
     <section className="w-full flex flex-col gap-3">
@@ -89,7 +91,11 @@ const NewReleaseSection = ({
           </span>
           <h2 className="text-lg font-semibold text-gray-900">새로 나온 음반</h2>
         </div>
-        <button type="button" className="text-sm text-gray-400">
+        <button
+          type="button"
+          onClick={onViewAll}
+          className="text-sm text-gray-400 cursor-pointer"
+        >
           전체보기
         </button>
       </div>
@@ -197,6 +203,7 @@ type UsedAlbumSectionProps = {
   loading: boolean;
   error: string | null;
   onItemClick: (aladinItemId: number) => void;
+  onViewAll: () => void;
 };
 
 const UsedAlbumSection = ({
@@ -204,6 +211,7 @@ const UsedAlbumSection = ({
   loading,
   error,
   onItemClick,
+  onViewAll,
 }: UsedAlbumSectionProps) => {
   return (
     <section className="w-full flex flex-col gap-3">
@@ -214,7 +222,11 @@ const UsedAlbumSection = ({
             중고 거래 음반
           </h2>
         </div>
-        <button type="button" className="text-sm text-gray-400">
+        <button
+          type="button"
+          onClick={onViewAll}
+          className="text-sm text-gray-400 cursor-pointer"
+        >
           더보기
         </button>
       </div>
@@ -343,6 +355,7 @@ const HomePage = () => {
           loading={newReleasesLoading}
           error={newReleasesError}
           onItemClick={(aladinItemId) => navigate(`/detail/${aladinItemId}`)}
+          onViewAll={() => navigate("/new-releases")}
         />
 
         <UsedAlbumSection
@@ -350,6 +363,7 @@ const HomePage = () => {
           loading={usedAlbumsLoading}
           error={usedAlbumsError}
           onItemClick={(aladinItemId) => navigate(`/detail/${aladinItemId}`)}
+          onViewAll={() => navigate("/used-albums")}
         />
 
         <section className="w-full flex flex-col gap-3">
