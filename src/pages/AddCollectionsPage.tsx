@@ -11,6 +11,7 @@ import TextAreaField from "../components/collection/TextAreaField";
 import {
   createCollection,
   updateCollection,
+  getCollectionAlbumAladinItemId,
   type Condition,
   type CollectionItemDetail,
 } from "../apis/collection/collection";
@@ -29,6 +30,7 @@ type RecordState = {
   record?: RecordItem;
   mode?: "edit";
   collectionItemId?: number;
+  aladinItemId?: number;
   item?: CollectionItemDetail;
 };
 
@@ -66,13 +68,18 @@ const AddCollectionsPage = () => {
   const isEdit = routeState?.mode === "edit" && !!routeState.collectionItemId;
   const editItem = routeState?.item;
 
-  /** URL /collection/add/:id — DetailPage에서 aladinItemId */
-  const aladinItemId = useMemo(() => Number(id), [id]);
+  /** URL /collection/add/:id — aladinItemId */
+  const aladinItemIdFromUrl = Number(id);
+  const resolvedAladinItemId =
+    routeState?.aladinItemId ??
+    (editItem
+      ? getCollectionAlbumAladinItemId(editItem.album)
+      : aladinItemIdFromUrl);
 
   const record = useMemo((): RecordItem | null => {
     if (editItem) {
       return {
-        id: editItem.album.albumId,
+        id: resolvedAladinItemId,
         label: editItem.status === "WISHLIST" ? "WISHLIST" : "OWNED",
         format: editItem.album.mediaType,
         title: editItem.album.title,
@@ -83,7 +90,7 @@ const AddCollectionsPage = () => {
     }
 
     return routeState?.record ?? null;
-  }, [editItem, routeState?.record]);
+  }, [editItem, resolvedAladinItemId, routeState]);
 
   const formDefaults = useMemo(
     () => getFormDefaults(editItem),
@@ -104,7 +111,15 @@ const AddCollectionsPage = () => {
   const handleSubmit = async () => {
     const purchasePrice = Number(price);
 
-    if (!isEdit && (!Number.isFinite(aladinItemId) || aladinItemId <= 0)) {
+    if (
+      !Number.isFinite(resolvedAladinItemId) ||
+      resolvedAladinItemId <= 0
+    ) {
+      window.alert("음반 아이디가 올바르지 않습니다.");
+      return;
+    }
+
+    if (!isEdit && (!Number.isFinite(aladinItemIdFromUrl) || aladinItemIdFromUrl <= 0)) {
       window.alert("음반 아이디가 올바르지 않습니다.");
       return;
     }
@@ -119,6 +134,7 @@ const AddCollectionsPage = () => {
 
       if (isEdit && routeState?.collectionItemId) {
         await updateCollection(routeState.collectionItemId, {
+          aladinItemId: resolvedAladinItemId,
           status: editItem?.status ?? "OWNED",
           condition: conditionMap[condition],
           purchasePrice,
@@ -133,7 +149,7 @@ const AddCollectionsPage = () => {
       }
 
       const data = await createCollection({
-        aladinItemId,
+        aladinItemId: aladinItemIdFromUrl,
         status: "OWNED",
         condition: conditionMap[condition],
         purchasePrice,

@@ -1,18 +1,11 @@
-export type StarFill = "empty" | "half" | "full";
-
-export const fillForIndex = (rating: number, index: number): StarFill => {
-  const r = rating - index;
-  if (r >= 1) return "full";
-  if (r >= 0.5) return "half";
-  return "empty";
-};
+import type { StarFill } from "../../util/starUtil";
 
 type SingleStarProps = {
   fill: StarFill;
   size?: string;
 };
 
-export const SingleStar = ({ fill, size = "text-[17px]" }: SingleStarProps) => {
+const SingleStar = ({ fill, size = "text-[17px]" }: SingleStarProps) => {
   const base = `select-none leading-none ${size}`;
   if (fill === "full") {
     return <span className={`${base} text-amber-400`}>★</span>;
@@ -32,3 +25,5 @@ export const SingleStar = ({ fill, size = "text-[17px]" }: SingleStarProps) => {
   }
   return <span className={`${base} text-gray-300`}>★</span>;
 };
+
+export default SingleStar;

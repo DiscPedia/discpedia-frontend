@@ -7,7 +7,7 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import eslintConfigPrettier from 'eslint-config-prettier'; // 1. 충돌 방지 설정 임포트
 
 export default defineConfig([
-  globalIgnores(['dist', 'node_modules', 'build']),
+  globalIgnores(['dist', 'node_modules', 'build', 'public/mockServiceWorker.js']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

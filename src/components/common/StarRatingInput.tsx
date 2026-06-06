@@ -1,5 +1,6 @@
 import type { MouseEvent } from "react";
-import { fillForIndex, SingleStar } from "../../util/startUtil";
+import { fillForIndex } from "../../util/starUtil";
+import SingleStar from "./SingleStar";
 
 type Props = {
   value: number;
