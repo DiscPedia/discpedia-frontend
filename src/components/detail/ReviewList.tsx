@@ -1,10 +1,12 @@
-import type { ReviewItem } from "../../apis/review";
+import type { ReviewItem, ReviewSort } from "../../apis/review";
 
 interface Props {
   items: ReviewItem[];
+  sort: ReviewSort;
   currentUserId?: string | null;
   loading?: boolean;
   error?: string | null;
+  onSortChange?: (sort: ReviewSort) => void;
   onToggleLike?: (review: ReviewItem) => void;
   onEdit?: (review: ReviewItem) => void;
   onDelete?: (review: ReviewItem) => void;
@@ -14,18 +16,37 @@ const formatDate = (value: string) => value.split("T")[0]?.replaceAll("-", ".") 
 
 const ReviewList = ({
   items,
+  sort,
   currentUserId = null,
   loading = false,
   error = null,
+  onSortChange,
   onToggleLike,
   onEdit,
   onDelete,
 }: Props) => {
+  const sortButtonClass = (active: boolean) =>
+    active
+      ? "text-sm font-semibold text-gray-900"
+      : "text-xs text-gray-400";
+
   return (
     <section className="bg-white px-5 pb-24">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-sm font-semibold text-gray-900">최신순</span>
-        <span className="text-xs text-gray-400">별점순</span>
+        <button
+          type="button"
+          onClick={() => onSortChange?.("LATEST")}
+          className={sortButtonClass(sort === "LATEST")}
+        >
+          최신순
+        </button>
+        <button
+          type="button"
+          onClick={() => onSortChange?.("RATING_DESC")}
+          className={sortButtonClass(sort === "RATING_DESC")}
+        >
+          별점순
+        </button>
       </div>
 
       {loading && (

@@ -13,6 +13,7 @@ import {
   likeReview,
   unlikeReview,
   type ReviewItem,
+  type ReviewSort,
 } from "../apis/review";
 import AlbumHero from "../components/detail/AlbumHero";
 import BottomCTA from "../components/detail/BottomCTA";
@@ -59,6 +60,7 @@ const DetailPage = () => {
   const [wishlistAlbumId, setWishlistAlbumId] = useState<number | null>(null);
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [reviewSort, setReviewSort] = useState<ReviewSort>("LATEST");
 
   useEffect(() => {
     if (invalidAlbumId) {
@@ -71,16 +73,9 @@ const DetailPage = () => {
       try {
         setLoading(true);
         setError(null);
-        setReviewsLoading(true);
-        setReviewsError(null);
 
-        const [albumData, reviewData, wishlistData, meData] = await Promise.all([
+        const [albumData, wishlistData, meData] = await Promise.all([
           getAlbumDetail(aladinItemId),
-          getAlbumReviews(aladinItemId, {
-            sort: "LATEST",
-            page: 0,
-            size: 20,
-          }),
           getCollectionItems({
             status: "WISHLIST",
             page: 0,
@@ -94,7 +89,6 @@ const DetailPage = () => {
             (item) => item.album.albumId === albumData.aladinItemId,
           );
           setAlbum(albumData);
-          setReviews(reviewData.items);
           setIsWishlisted(Boolean(wishlistItem));
           setWishlistAlbumId(wishlistItem?.album.albumId ?? null);
           setCurrentUserId(meData.subject);
@@ -102,12 +96,10 @@ const DetailPage = () => {
       } catch {
         if (!ignore) {
           setError("Failed to load album detail");
-          setReviewsError("Failed to load reviews");
         }
       } finally {
         if (!ignore) {
           setLoading(false);
-          setReviewsLoading(false);
         }
       }
     };
@@ -118,6 +110,45 @@ const DetailPage = () => {
       ignore = true;
     };
   }, [aladinItemId, invalidAlbumId]);
+
+  useEffect(() => {
+    if (invalidAlbumId) {
+      return;
+    }
+
+    let ignore = false;
+
+    const loadReviews = async () => {
+      try {
+        setReviewsLoading(true);
+        setReviewsError(null);
+
+        const reviewData = await getAlbumReviews(aladinItemId, {
+          sort: reviewSort,
+          page: 0,
+          size: 20,
+        });
+
+        if (!ignore) {
+          setReviews(reviewData.items);
+        }
+      } catch {
+        if (!ignore) {
+          setReviewsError("Failed to load reviews");
+        }
+      } finally {
+        if (!ignore) {
+          setReviewsLoading(false);
+        }
+      }
+    };
+
+    void loadReviews();
+
+    return () => {
+      ignore = true;
+    };
+  }, [aladinItemId, invalidAlbumId, reviewSort]);
 
   const specItems = useMemo(() => {
     if (!album) return [];
@@ -355,9 +386,11 @@ const DetailPage = () => {
       />
       <ReviewList
         items={reviews}
+        sort={reviewSort}
         currentUserId={currentUserId}
         loading={reviewsLoading}
         error={reviewsError}
+        onSortChange={setReviewSort}
         onToggleLike={handleToggleLike}
         onEdit={handleEditReview}
         onDelete={handleDeleteReview}
