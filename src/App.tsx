@@ -44,10 +44,6 @@ const router = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       {
-        path: "/detail/:id",
-        element: <DetailPage />,
-      },
-      {
         path: "/recommand",
         element: <RecommandPage />,
       },
@@ -68,14 +64,6 @@ const router = createBrowserRouter([
         element: <EditReviewPage />,
       },
       {
-        path: "/collection/add/:id",
-        element: <AddCollectionsPage />,
-      },
-      {
-        path: "/collection/:collectionItemId",
-        element: <CollectionDetailPage />,
-      },
-      {
         element: <BackgroundPage />,
         children: [
           { path: "home", element: <HomePage /> },
@@ -84,6 +72,12 @@ const router = createBrowserRouter([
           { path: "search", element: <SearchPage /> },
           { path: "collection", element: <CollectionPage /> },
           { path: "myPage", element: <MyPage /> },
+          { path: "/detail/:id", element: <DetailPage /> },
+          { path: "/collection/add/:id", element: <AddCollectionsPage /> },
+          {
+            path: "/collection/:collectionItemId",
+            element: <CollectionDetailPage />,
+          },
         ],
       },
     ],
