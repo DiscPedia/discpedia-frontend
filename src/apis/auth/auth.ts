@@ -22,6 +22,10 @@ export type OAuthLoginResponse = {
 
 const OAUTH_STATE_KEY = "oauth_state";
 
+export function isAuthenticated(): boolean {
+  return Boolean(localStorage.getItem("accessToken"));
+}
+
 export async function startOAuthLogin(provider: OAuthProvider) {
   const res = (await call(
     `/api/v1/auth/oauth/${provider}/authorize`,

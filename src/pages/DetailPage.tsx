@@ -263,6 +263,7 @@ const DetailPage = () => {
       setReviews((prev) =>
         prev.filter((item) => item.reviewId !== review.reviewId),
       );
+      navigate(`/detail/${album.aladinItemId}`, { replace: true });
     } catch {
       window.alert("리뷰 삭제에 실패했습니다.");
     }
