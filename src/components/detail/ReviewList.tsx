@@ -2,6 +2,7 @@ import type { ReviewItem } from "../../apis/review";
 
 interface Props {
   items: ReviewItem[];
+  currentUserId?: string | null;
   loading?: boolean;
   error?: string | null;
   onToggleLike?: (review: ReviewItem) => void;
@@ -13,6 +14,7 @@ const formatDate = (value: string) => value.split("T")[0]?.replaceAll("-", ".") 
 
 const ReviewList = ({
   items,
+  currentUserId = null,
   loading = false,
   error = null,
   onToggleLike,
@@ -51,7 +53,12 @@ const ReviewList = ({
 
       {!loading && !error && items.length > 0 && (
         <div className="space-y-3">
-          {items.map((item) => (
+          {items.map((item) => {
+            const isMine = Boolean(
+              currentUserId && item.writer.userId === currentUserId,
+            );
+
+            return (
             <article
               key={item.reviewId}
               className="border border-gray-100 rounded-2xl p-4 shadow-sm"
@@ -85,24 +92,29 @@ const ReviewList = ({
                   >
                     {item.likedByMe ? "♥" : "♡"} {item.likeCount}
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => onEdit?.(item)}
-                    className="font-medium text-gray-500"
-                  >
-                    수정
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => onDelete?.(item)}
-                    className="font-medium text-red-400"
-                  >
-                    삭제
-                  </button>
+                  {isMine && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => onEdit?.(item)}
+                        className="font-medium text-gray-500"
+                      >
+                        수정
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => onDelete?.(item)}
+                        className="font-medium text-red-400"
+                      >
+                        삭제
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             </article>
-          ))}
+            );
+          })}
         </div>
       )}
     </section>

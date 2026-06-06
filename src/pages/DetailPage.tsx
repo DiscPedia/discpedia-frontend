@@ -22,6 +22,7 @@ import ProductInfo from "../components/detail/ProductInfo";
 import ReviewList from "../components/detail/ReviewList";
 import ReviewSummary from "../components/detail/ReviewSummary";
 import SpecList from "../components/detail/SpecList";
+import { getMe } from "../apis/mypage/mypage";
 
 const formatDate = (value: string) => value.replaceAll("-", ".");
 
@@ -57,6 +58,7 @@ const DetailPage = () => {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [wishlistAlbumId, setWishlistAlbumId] = useState<number | null>(null);
   const [wishlistLoading, setWishlistLoading] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   useEffect(() => {
     if (invalidAlbumId) {
@@ -72,7 +74,7 @@ const DetailPage = () => {
         setReviewsLoading(true);
         setReviewsError(null);
 
-        const [albumData, reviewData, wishlistData] = await Promise.all([
+        const [albumData, reviewData, wishlistData, meData] = await Promise.all([
           getAlbumDetail(aladinItemId),
           getAlbumReviews(aladinItemId, {
             sort: "LATEST",
@@ -84,6 +86,7 @@ const DetailPage = () => {
             page: 0,
             size: 100,
           }),
+          getMe(),
         ]);
 
         if (!ignore) {
@@ -94,6 +97,7 @@ const DetailPage = () => {
           setReviews(reviewData.items);
           setIsWishlisted(Boolean(wishlistItem));
           setWishlistAlbumId(wishlistItem?.album.albumId ?? null);
+          setCurrentUserId(meData.subject);
         }
       } catch {
         if (!ignore) {
@@ -351,6 +355,7 @@ const DetailPage = () => {
       />
       <ReviewList
         items={reviews}
+        currentUserId={currentUserId}
         loading={reviewsLoading}
         error={reviewsError}
         onToggleLike={handleToggleLike}
