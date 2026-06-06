@@ -63,6 +63,8 @@ const router = createBrowserRouter([
         path: "/review/edit/:reviewId",
         element: <EditReviewPage />,
       },
+      { path: "/collection/add/:id", element: <AddCollectionsPage /> },
+      { path: "/detail/:id", element: <DetailPage /> },
       {
         element: <BackgroundPage />,
         children: [
@@ -72,8 +74,8 @@ const router = createBrowserRouter([
           { path: "search", element: <SearchPage /> },
           { path: "collection", element: <CollectionPage /> },
           { path: "myPage", element: <MyPage /> },
-          { path: "/detail/:id", element: <DetailPage /> },
-          { path: "/collection/add/:id", element: <AddCollectionsPage /> },
+          
+          
           {
             path: "/collection/:collectionItemId",
             element: <CollectionDetailPage />,
