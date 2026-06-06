@@ -66,6 +66,10 @@ const router = createBrowserRouter([
       { path: "/collection/add/:id", element: <AddCollectionsPage /> },
       { path: "/detail/:id", element: <DetailPage /> },
       {
+        path: "/collection/:collectionItemId",
+        element: <CollectionDetailPage />,
+      },
+      {
         element: <BackgroundPage />,
         children: [
           { path: "home", element: <HomePage /> },
@@ -76,10 +80,7 @@ const router = createBrowserRouter([
           { path: "myPage", element: <MyPage /> },
           
           
-          {
-            path: "/collection/:collectionItemId",
-            element: <CollectionDetailPage />,
-          },
+          
         ],
       },
     ],
