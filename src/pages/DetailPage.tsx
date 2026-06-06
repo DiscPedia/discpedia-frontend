@@ -255,6 +255,8 @@ const DetailPage = () => {
   };
 
   const handleDeleteReview = async (review: ReviewItem) => {
+    if (!album) return;
+
     const ok = window.confirm("리뷰를 삭제하시겠습니까?");
     if (!ok) return;
 
