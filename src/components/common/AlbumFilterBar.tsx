@@ -30,6 +30,9 @@ const chipClassName = (active: boolean) =>
       : "border-gray-200 bg-white text-gray-700"
   }`;
 
+const filterRowClassName =
+  "flex w-full min-w-0 touch-pan-x gap-3 overflow-x-auto overscroll-x-contain scroll-smooth scrollbar-hide pb-1";
+
 const AlbumFilterBar = ({
   mediaType,
   genre,
@@ -45,7 +48,7 @@ const AlbumFilterBar = ({
           <span>필터</span>
         </div>
       </div>
-      <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1">
+      <div className={filterRowClassName}>
         {mediaTypeOptions.map((option) => (
           <button
             key={option}
@@ -59,7 +62,7 @@ const AlbumFilterBar = ({
           </button>
         ))}
       </div>
-      <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1">
+      <div className={filterRowClassName}>
         {genreOptions.map((option) => (
           <button
             key={option.value}
