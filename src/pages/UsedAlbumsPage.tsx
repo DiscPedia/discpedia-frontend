@@ -1,7 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getUsedAlbums, type UsedAlbum } from "../apis/aladin";
+import {
+  getUsedAlbums,
+  type AladinGenre,
+  type UsedAlbum,
+} from "../apis/aladin";
+import type { MediaType } from "../apis/collection/collection";
+import AlbumFilterBar from "../components/common/AlbumFilterBar";
 import Record from "../components/common/Record";
 
 const toRecordItem = (item: UsedAlbum) => ({
@@ -17,6 +23,8 @@ const toRecordItem = (item: UsedAlbum) => ({
 const UsedAlbumsPage = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState<UsedAlbum[]>([]);
+  const [mediaType, setMediaType] = useState<MediaType | undefined>();
+  const [genre, setGenre] = useState<AladinGenre | undefined>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,7 +35,12 @@ const UsedAlbumsPage = () => {
       try {
         setLoading(true);
         setError(null);
-        const data = await getUsedAlbums({ page: 0, size: 50 });
+        const data = await getUsedAlbums({
+          page: 0,
+          size: 50,
+          mediaType,
+          genre,
+        });
 
         if (!ignore) {
           setItems(data.items);
@@ -48,7 +61,7 @@ const UsedAlbumsPage = () => {
     return () => {
       ignore = true;
     };
-  }, []);
+  }, [genre, mediaType]);
 
   const records = useMemo(() => items.map(toRecordItem), [items]);
 
@@ -66,6 +79,12 @@ const UsedAlbumsPage = () => {
           </button>
           <h1 className="text-2xl font-bold">중고 거래 음반</h1>
         </header>
+        <AlbumFilterBar
+          mediaType={mediaType}
+          genre={genre}
+          onMediaTypeChange={setMediaType}
+          onGenreChange={setGenre}
+        />
         {loading && (
           <section className="grid grid-cols-2 gap-6">
             {Array.from({ length: 8 }).map((_, index) => (
