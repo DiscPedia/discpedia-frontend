@@ -26,11 +26,6 @@ export async function call(api: string, method: string, request?: unknown, optio
   try {
     const response = await fetch(url, options);
 
-    if (response.status === 403) {
-      window.location.href = "/login";
-      throw new Error("Forbidden");
-    }
-
     if (!response.ok) {
       throw new Error(response.statusText || `HTTP ${response.status}`);
     }

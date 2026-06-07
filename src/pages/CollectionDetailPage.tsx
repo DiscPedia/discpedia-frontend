@@ -13,6 +13,7 @@ import { getHighQualityCoverUrl } from "../util/imageUtil";
 import {
   deleteCollection,
   getCollectionItemDetail,
+  getCollectionAlbumAladinItemId,
   type CollectionItemDetail,
 } from "../apis/collection/collectionDetail";
 
@@ -65,10 +66,12 @@ const CollectionDetailPage = () => {
 
   const handleEdit = () => {
     if (!item) return;
-    navigate(`/collection/add/${item.album.albumId}`, {
+    const aladinItemId = getCollectionAlbumAladinItemId(item.album);
+    navigate(`/collection/add/${aladinItemId}`, {
       state: {
         mode: "edit",
         collectionItemId: item.collectionItemId,
+        aladinItemId,
         item,
       },
     });

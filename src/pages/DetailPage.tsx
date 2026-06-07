@@ -13,6 +13,7 @@ import {
   likeReview,
   unlikeReview,
   type ReviewItem,
+  type ReviewSort,
 } from "../apis/review";
 import AlbumHero from "../components/detail/AlbumHero";
 import BottomCTA from "../components/detail/BottomCTA";
@@ -22,6 +23,7 @@ import ProductInfo from "../components/detail/ProductInfo";
 import ReviewList from "../components/detail/ReviewList";
 import ReviewSummary from "../components/detail/ReviewSummary";
 import SpecList from "../components/detail/SpecList";
+import { getMe } from "../apis/mypage/mypage";
 
 const formatDate = (value: string) => value.replaceAll("-", ".");
 
@@ -57,6 +59,8 @@ const DetailPage = () => {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [wishlistAlbumId, setWishlistAlbumId] = useState<number | null>(null);
   const [wishlistLoading, setWishlistLoading] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [reviewSort, setReviewSort] = useState<ReviewSort>("LATEST");
 
   useEffect(() => {
     if (invalidAlbumId) {
@@ -69,21 +73,15 @@ const DetailPage = () => {
       try {
         setLoading(true);
         setError(null);
-        setReviewsLoading(true);
-        setReviewsError(null);
 
-        const [albumData, reviewData, wishlistData] = await Promise.all([
+        const [albumData, wishlistData, meData] = await Promise.all([
           getAlbumDetail(aladinItemId),
-          getAlbumReviews(aladinItemId, {
-            sort: "LATEST",
-            page: 0,
-            size: 20,
-          }),
           getCollectionItems({
             status: "WISHLIST",
             page: 0,
             size: 100,
           }),
+          getMe(),
         ]);
 
         if (!ignore) {
@@ -91,19 +89,17 @@ const DetailPage = () => {
             (item) => item.album.albumId === albumData.aladinItemId,
           );
           setAlbum(albumData);
-          setReviews(reviewData.items);
           setIsWishlisted(Boolean(wishlistItem));
           setWishlistAlbumId(wishlistItem?.album.albumId ?? null);
+          setCurrentUserId(meData.subject);
         }
       } catch {
         if (!ignore) {
           setError("Failed to load album detail");
-          setReviewsError("Failed to load reviews");
         }
       } finally {
         if (!ignore) {
           setLoading(false);
-          setReviewsLoading(false);
         }
       }
     };
@@ -114,6 +110,45 @@ const DetailPage = () => {
       ignore = true;
     };
   }, [aladinItemId, invalidAlbumId]);
+
+  useEffect(() => {
+    if (invalidAlbumId) {
+      return;
+    }
+
+    let ignore = false;
+
+    const loadReviews = async () => {
+      try {
+        setReviewsLoading(true);
+        setReviewsError(null);
+
+        const reviewData = await getAlbumReviews(aladinItemId, {
+          sort: reviewSort,
+          page: 0,
+          size: 20,
+        });
+
+        if (!ignore) {
+          setReviews(reviewData.items);
+        }
+      } catch {
+        if (!ignore) {
+          setReviewsError("Failed to load reviews");
+        }
+      } finally {
+        if (!ignore) {
+          setReviewsLoading(false);
+        }
+      }
+    };
+
+    void loadReviews();
+
+    return () => {
+      ignore = true;
+    };
+  }, [aladinItemId, invalidAlbumId, reviewSort]);
 
   const specItems = useMemo(() => {
     if (!album) return [];
@@ -255,6 +290,8 @@ const DetailPage = () => {
   };
 
   const handleDeleteReview = async (review: ReviewItem) => {
+    if (!album) return;
+
     const ok = window.confirm("리뷰를 삭제하시겠습니까?");
     if (!ok) return;
 
@@ -263,6 +300,7 @@ const DetailPage = () => {
       setReviews((prev) =>
         prev.filter((item) => item.reviewId !== review.reviewId),
       );
+      navigate(`/detail/${album.aladinItemId}`, { replace: true });
     } catch {
       window.alert("리뷰 삭제에 실패했습니다.");
     }
@@ -348,8 +386,11 @@ const DetailPage = () => {
       />
       <ReviewList
         items={reviews}
+        sort={reviewSort}
+        currentUserId={currentUserId}
         loading={reviewsLoading}
         error={reviewsError}
+        onSortChange={setReviewSort}
         onToggleLike={handleToggleLike}
         onEdit={handleEditReview}
         onDelete={handleDeleteReview}

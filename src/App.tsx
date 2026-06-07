@@ -16,6 +16,7 @@ import DetailPage from "./pages/DetailPage";
 import AddCollectionsPage from "./pages/AddCollectionsPage";
 import RecommandPage from "./pages/RecommandPage";
 import Login from "./components/common/Login";
+import ProtectedRoute from "./components/common/ProtectedRoute";
 import MyReviewPage from "./pages/MyReviewPage";
 import PortfolioPage from "./pages/PortfolioPage";
 import CollectionDetailPage from "./pages/CollectionDetailPage";
@@ -32,10 +33,6 @@ const router = createBrowserRouter([
     element: <LoginPage />,
   },
   {
-    path: "/detail/:id",
-    element: <DetailPage />,
-  },
-  {
     path: "/login/oauth2/code/kakao",
     element: <Login />,
   },
@@ -44,42 +41,48 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "/recommand",
-    element: <RecommandPage />,
-  },
-  {
-    path: "/myReview",
-    element: <MyReviewPage />,
-  },
-  {
-    path: "/portfolio",
-    element: <PortfolioPage />,
-  },
-  {
-    path: "/review/write/:id",
-    element: <WriteReviewPage />,
-  },
-  {
-    path: "/review/edit/:reviewId",
-    element: <EditReviewPage />,
-  },
-  {
-    path: "/collection/add/:id",
-    element: <AddCollectionsPage />,
-  },
-  {
-    path: "/collection/:collectionItemId",
-    element: <CollectionDetailPage />,
-  },
-  {
-    element: <BackgroundPage />,
+    element: <ProtectedRoute />,
     children: [
-      { path: "home", element: <HomePage /> },
-      { path: "new-releases", element: <NewReleasesPage /> },
-      { path: "used-albums", element: <UsedAlbumsPage /> },
-      { path: "search", element: <SearchPage /> },
-      { path: "collection", element: <CollectionPage /> },
-      { path: "myPage", element: <MyPage /> },
+      {
+        path: "/recommand",
+        element: <RecommandPage />,
+      },
+      {
+        path: "/myReview",
+        element: <MyReviewPage />,
+      },
+      {
+        path: "/portfolio",
+        element: <PortfolioPage />,
+      },
+      {
+        path: "/review/write/:id",
+        element: <WriteReviewPage />,
+      },
+      {
+        path: "/review/edit/:reviewId",
+        element: <EditReviewPage />,
+      },
+      { path: "/collection/add/:id", element: <AddCollectionsPage /> },
+      { path: "/detail/:id", element: <DetailPage /> },
+      {
+        path: "/collection/:collectionItemId",
+        element: <CollectionDetailPage />,
+      },
+      {
+        element: <BackgroundPage />,
+        children: [
+          { path: "home", element: <HomePage /> },
+          { path: "new-releases", element: <NewReleasesPage /> },
+          { path: "used-albums", element: <UsedAlbumsPage /> },
+          { path: "search", element: <SearchPage /> },
+          { path: "collection", element: <CollectionPage /> },
+          { path: "myPage", element: <MyPage /> },
+          
+          
+          
+        ],
+      },
     ],
   },
 ]);

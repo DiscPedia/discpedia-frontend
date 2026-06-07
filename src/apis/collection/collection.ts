@@ -19,6 +19,7 @@ export type CollectionSummary = {
 
 export type CollectionAlbum = {
   albumId: number;
+  aladinItemId?: number;
   title: string;
   artistName: string;
   releaseDate: string;
@@ -27,6 +28,9 @@ export type CollectionAlbum = {
   coverImageUrl: string;
   listPrice: number;
 };
+
+export const getCollectionAlbumAladinItemId = (album: CollectionAlbum): number =>
+  album.aladinItemId ?? album.albumId;
 
 export type CollectionItem = {
   collectionItemId: number;
@@ -59,8 +63,9 @@ export type CreateCollectionRequest = {
   memo?: string;
 };
 
-/** PATCH /api/v1/collections/{id} — aladinItemId 제외 (중복 검사 회피) */
+/** PATCH /api/v1/collections/{id} */
 export type UpdateCollectionRequest = {
+  aladinItemId: number;
   status: CollectionStatus;
   condition?: Condition;
   purchasePrice?: number;
@@ -167,6 +172,16 @@ export const getCollectionItemDetail = async (
   return normalizeDetail(unwrapData<CollectionItemDetailRaw>(res));
 };
 
+const toUpdateRequestBody = (request: UpdateCollectionRequest) => ({
+  aladinItemId: request.aladinItemId,
+  status: request.status,
+  condition: request.condition,
+  purchasePrice: request.purchasePrice,
+  purchaseDate: request.purchaseDate,
+  purchasePlace: request.purchasePlace,
+  memo: request.memo,
+});
+
 /** PATCH /api/v1/collections/{collectionItemId} */
 export const updateCollection = async (
   collectionItemId: number,
@@ -175,7 +190,7 @@ export const updateCollection = async (
   const res = await call(
     `${COLLECTIONS_BASE}/${collectionItemId}`,
     "PATCH",
-    request,
+    toUpdateRequestBody(request),
   );
   return normalizeDetail(unwrapData<CollectionItemDetailRaw>(res));
 };
