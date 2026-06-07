@@ -92,9 +92,24 @@ export type AlbumSearchResponse = {
   items: AlbumSearchItem[];
 };
 
+export type AladinGenre =
+  | "INDIE_ROCK"
+  | "K_POP"
+  | "JAZZ"
+  | "CLASSIC"
+  | "POP"
+  | "HIPHOP_RNB"
+  | "ELECTRONIC"
+  | "OST"
+  | "NEW_AGE"
+  | "WORLD"
+  | "ETC";
+
 export type AladinPageParams = {
   page?: number;
   size?: number;
+  mediaType?: MediaType;
+  genre?: AladinGenre;
 };
 
 export type AlbumSearchParams = {

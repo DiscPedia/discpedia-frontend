@@ -1,9 +1,14 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import type { NewRelease } from "../apis/aladin";
+import {
+  getNewReleases,
+  type AladinGenre,
+  type NewRelease,
+} from "../apis/aladin";
+import type { MediaType } from "../apis/collection/collection";
+import AlbumFilterBar from "../components/common/AlbumFilterBar";
 import Record from "../components/common/Record";
-import { useNewReleases } from "../hooks/useNewReleases";
 
 const toRecordItem = (item: NewRelease) => ({
   id: item.aladinItemId,
@@ -17,7 +22,47 @@ const toRecordItem = (item: NewRelease) => ({
 
 const NewReleasesPage = () => {
   const navigate = useNavigate();
-  const { items, loading, error } = useNewReleases(50);
+  const [items, setItems] = useState<NewRelease[]>([]);
+  const [mediaType, setMediaType] = useState<MediaType | undefined>();
+  const [genre, setGenre] = useState<AladinGenre | undefined>();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let ignore = false;
+
+    const loadNewReleases = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await getNewReleases({
+          page: 0,
+          size: 50,
+          mediaType,
+          genre,
+        });
+
+        if (!ignore) {
+          setItems(data.items);
+        }
+      } catch {
+        if (!ignore) {
+          setError("Failed to load new releases");
+        }
+      } finally {
+        if (!ignore) {
+          setLoading(false);
+        }
+      }
+    };
+
+    void loadNewReleases();
+
+    return () => {
+      ignore = true;
+    };
+  }, [genre, mediaType]);
+
   const records = useMemo(() => items.map(toRecordItem), [items]);
 
   return (
@@ -34,6 +79,12 @@ const NewReleasesPage = () => {
           </button>
           <h1 className="text-2xl font-bold">새로 나온 음반</h1>
         </header>
+        <AlbumFilterBar
+          mediaType={mediaType}
+          genre={genre}
+          onMediaTypeChange={setMediaType}
+          onGenreChange={setGenre}
+        />
         {loading && (
           <section className="grid grid-cols-2 gap-6">
             {Array.from({ length: 8 }).map((_, index) => (
