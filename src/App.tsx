@@ -40,6 +40,11 @@ const router = createBrowserRouter([
     path: "/login/oauth2/code/google",
     element: <Login />,
   },
+  // 서버가 내려간 동안 mock 포트폴리오 화면을 비로그인으로 확인하기 위한 임시 예외입니다.
+  {
+    path: "/portfolio",
+    element: <PortfolioPage />,
+  },
   {
     element: <ProtectedRoute />,
     children: [
@@ -50,10 +55,6 @@ const router = createBrowserRouter([
       {
         path: "/myReview",
         element: <MyReviewPage />,
-      },
-      {
-        path: "/portfolio",
-        element: <PortfolioPage />,
       },
       {
         path: "/review/write/:id",
