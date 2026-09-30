@@ -22,6 +22,7 @@ import PortfolioPage from "./pages/PortfolioPage";
 import CollectionDetailPage from "./pages/CollectionDetailPage";
 import EditReviewPage from "./pages/EditReviewPage";
 import WriteReviewPage from "./pages/WriteReviewPage";
+import AiChatPage from "./pages/AiChatPage";
 
 const router = createBrowserRouter([
   {
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
         element: <RecommandPage />,
       },
       {
+        path: "/ai-chat",
+        element: <AiChatPage />,
+      },
+      {
         path: "/myReview",
         element: <MyReviewPage />,
       },
@@ -79,9 +84,6 @@ const router = createBrowserRouter([
           { path: "search", element: <SearchPage /> },
           { path: "collection", element: <CollectionPage /> },
           { path: "myPage", element: <MyPage /> },
-          
-          
-          
         ],
       },
     ],
