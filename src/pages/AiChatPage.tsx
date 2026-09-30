@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { sendAiChatMessage, type AiAlbumRecommendation } from "../apis/ai/chat";
+import Logo from "../assets/common/Logo.svg";
 import { getHighQualityCoverUrl } from "../util/imageUtil";
 
 type ChatMessage = {
@@ -244,12 +245,12 @@ const AiChatPage = () => {
               }`}
             >
               {message.role === "assistant" && (
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-black text-xs font-extrabold text-[#ffdb36]">
-                  AI
+                <div className="flex h-10 w-[72px] shrink-0 items-center justify-center rounded-full bg-white px-2 shadow-sm">
+                  <img src={Logo} alt="DiscPedia" className="h-auto w-full" />
                 </div>
               )}
               <div
-                className={`max-w-[calc(100%-50px)] rounded-[22px] px-4 py-3 text-sm leading-6 shadow-sm ${
+                className={`max-w-[calc(100%-82px)] rounded-[22px] px-4 py-3 text-sm leading-6 shadow-sm ${
                   message.role === "user"
                     ? "rounded-tr-md bg-[#f3732a] text-white"
                     : message.isError
