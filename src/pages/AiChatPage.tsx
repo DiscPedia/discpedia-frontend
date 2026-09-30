@@ -74,7 +74,6 @@ const AiChatPage = () => {
         error instanceof Error
           ? error.message
           : "AI와 연결하지 못했습니다. 잠시 후 다시 시도해 주세요.";
-
       setMessages((current) =>
         current.map((message) =>
           message.id === assistantId
