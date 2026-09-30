@@ -14,6 +14,22 @@ function getProviderFromPath(pathname: string): OAuthProvider | null {
 /** StrictMode remount에도 유지 (컴포넌트 밖 ref) */
 const oauthHandledRef = { current: false };
 
+/** 앱(React Native) 딥링크. 백엔드가 Origin으로 정한 웹 콜백을 앱으로 중계한다. */
+const APP_CALLBACK_SCHEME = "discpedia://login/oauth2/code";
+
+/**
+ * 앱에서 시작한 로그인인지 판별한다.
+ * 웹에서 시작하면 startOAuthLogin이 sessionStorage에 state를 넣는데,
+ * 앱이 띄운 브라우저에는 그 값이 없다.
+ */
+const isAppLoginFlow = () => sessionStorage.getItem("oauth_state") === null;
+
+/** 앱이 열리면 이 페이지는 숨겨진다. 안 열리면 웹에서 그대로 로그인한다. */
+const waitForAppSwitch = (ms: number) =>
+  new Promise<boolean>((resolve) => {
+    window.setTimeout(() => resolve(document.visibilityState === "hidden"), ms);
+  });
+
 const Login = () => {
   const location = useLocation();
   const [done, setDone] = useState(false);
@@ -50,6 +66,16 @@ const Login = () => {
         oauthHandledRef.current = false;
         if (mountedRef.current) setFailed(true);
         return;
+      }
+
+      if (isAppLoginFlow()) {
+        window.location.href = `${APP_CALLBACK_SCHEME}/${provider}?code=${encodeURIComponent(
+          code,
+        )}&state=${encodeURIComponent(state)}`;
+
+        if (await waitForAppSwitch(1500)) {
+          return;
+        }
       }
 
       try {
