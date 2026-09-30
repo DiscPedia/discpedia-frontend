@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import {
-  getUsedAlbums,
-  type NewRelease,
-  type UsedAlbum,
-} from "../apis/aladin";
+import { getUsedAlbums, type NewRelease, type UsedAlbum } from "../apis/aladin";
 import { useNewReleases } from "../hooks/useNewReleases";
 import { getHighQualityCoverUrl } from "../util/imageUtil";
+import AiRecommendationCard from "../components/home/AiRecommendationCard";
 
 const formatDate = (value: string) => value.replaceAll("-", ".");
 
@@ -89,7 +86,9 @@ const NewReleaseSection = ({
           <span className="text-[10px] font-semibold text-white bg-[#FFB347] px-2 py-0.5 rounded-full">
             NEW
           </span>
-          <h2 className="text-lg font-semibold text-gray-900">새로 나온 음반</h2>
+          <h2 className="text-lg font-semibold text-gray-900">
+            새로 나온 음반
+          </h2>
         </div>
         <button
           type="button"
@@ -349,6 +348,15 @@ const HomePage = () => {
             </div>
           </div>
         </section>
+
+        <AiRecommendationCard
+          albums={newReleases.slice(0, 3)}
+          onOpen={(initialMessage) =>
+            navigate("/ai-chat", {
+              state: initialMessage ? { initialMessage } : undefined,
+            })
+          }
+        />
 
         <NewReleaseSection
           items={newReleases}
