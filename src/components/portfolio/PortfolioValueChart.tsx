@@ -5,19 +5,23 @@ type PortfolioValueChartProps = {
 };
 
 const formatAxisValue = (value: number) => `₩${Math.round(value / 10_000)}만`;
+const formatMonth = (month: string) => {
+  const monthNumber = Number(month.split("-").at(-1));
+  return Number.isFinite(monthNumber) ? `${monthNumber}월` : month;
+};
 
 const PortfolioValueChart = ({ values }: PortfolioValueChartProps) => {
   const width = 310;
   const height = 218;
   const plot = { left: 49, right: 286, top: 22, bottom: 178 };
-  const maxValue = Math.max(...values.map((item) => item.value), 1);
+  const maxValue = Math.max(...values.map((item) => item.totalValue), 1);
   const axisMax = Math.ceil(maxValue / 100_000) * 100_000 + 100_000;
   const axisSteps = [axisMax, axisMax * 0.75, axisMax * 0.5, axisMax * 0.25, 0];
   const graphWidth = plot.right - plot.left;
   const graphHeight = plot.bottom - plot.top;
   const points = values.map((item, index) => {
     const x = values.length === 1 ? (plot.left + plot.right) / 2 : plot.left + (graphWidth * index) / (values.length - 1);
-    const y = plot.bottom - (item.value / axisMax) * graphHeight;
+    const y = plot.bottom - (item.totalValue / axisMax) * graphHeight;
     return { ...item, x, y };
   });
   const line = points.map((point) => `${point.x},${point.y}`).join(" ");
@@ -48,7 +52,7 @@ const PortfolioValueChart = ({ values }: PortfolioValueChartProps) => {
           {points.map((point) => (
             <g key={point.month}>
               <circle cx={point.x} cy={point.y} r="4" fill="white" stroke="#ff6818" strokeWidth="2.5" />
-              <text x={point.x} y="201" textAnchor="middle" fill="#98a1b0" fontSize="11">{point.label}</text>
+              <text x={point.x} y="201" textAnchor="middle" fill="#98a1b0" fontSize="11">{formatMonth(point.month)}</text>
             </g>
           ))}
         </svg>

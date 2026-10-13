@@ -59,13 +59,13 @@ const PortfolioPage = () => {
           <div className="space-y-7">
             <PortfolioSummaryCard
               totalValue={report.totalValue}
-              monthlyChangeAmount={report.monthlyChangeAmount}
-              monthlyChangeRate={report.monthlyChangeRate}
+              changeAmount={report.changeAmount}
+              changeRate={report.changeRate}
             />
             <PortfolioValueChart values={report.valueHistory} />
             <PortfolioGenreChart
               genres={report.genreDistribution}
-              albumCount={report.albumCount}
+              albumCount={report.ownedCount}
             />
             <PortfolioDownloadButton report={report} />
           </div>
