@@ -30,12 +30,28 @@ const chartColors = [
   "#84CC16",
   "#F97316",
   "#64748B",
+  "#14B8A6",
+  "#A855F7",
 ];
 
 const getGenreLabel = (genre: string) =>
   genreLabels[genre] ?? genre.replaceAll("_", " ");
 
 const PortfolioGenreChart = ({ genres, albumCount }: PortfolioGenreChartProps) => {
+  if (genres.length === 0) {
+    return (
+      <section>
+        <h2 className="flex items-center gap-1.5 text-lg font-extrabold text-[#1f2937]">
+          <span aria-hidden="true" className="text-[19px] leading-none">◔</span>
+          장르별 분포
+        </h2>
+        <div className="mt-3 flex min-h-48 items-center justify-center rounded-[20px] border border-[#e8e9ed] bg-white px-6 text-center text-sm leading-6 text-[#98a1b0] shadow-sm shadow-black/[0.05]">
+          분류된 장르 정보가 없어요.
+        </div>
+      </section>
+    );
+  }
+
   const radius = 62;
   const circumference = 2 * Math.PI * radius;
   const chartSegments = genres.map((genre, index) => {
@@ -60,6 +76,14 @@ const PortfolioGenreChart = ({ genres, albumCount }: PortfolioGenreChartProps) =
       <div className="mt-3 rounded-[20px] border border-[#e8e9ed] bg-white px-4 py-5 shadow-sm shadow-black/[0.05]">
         <div className="relative mx-auto h-[150px] w-[150px]">
           <svg viewBox="0 0 160 160" className="h-full w-full -rotate-90" role="img" aria-label="장르별 보유 음반 분포">
+            <circle
+              cx="80"
+              cy="80"
+              r={radius}
+              fill="none"
+              stroke="#f0f1f3"
+              strokeWidth="18"
+            />
             {chartSegments.map(({ genre, color, length, offset }) => {
               const gap = 5;
               return (
@@ -73,7 +97,9 @@ const PortfolioGenreChart = ({ genres, albumCount }: PortfolioGenreChartProps) =
                   strokeWidth="18"
                   strokeDasharray={`${Math.max(length - gap, 0)} ${circumference}`}
                   strokeDashoffset={offset}
-                />
+                >
+                  <title>{`${getGenreLabel(genre.genre)} ${genre.count}장 (${genre.percentage.toFixed(1)}%)`}</title>
+                </circle>
               );
             })}
           </svg>
@@ -89,7 +115,7 @@ const PortfolioGenreChart = ({ genres, albumCount }: PortfolioGenreChartProps) =
                 className="h-3 w-3 rounded-full"
                 style={{ backgroundColor: chartColors[index % chartColors.length] }}
               />
-              {getGenreLabel(genre.genre)} {genre.count}장
+              {getGenreLabel(genre.genre)} {genre.count}장 · {genre.percentage.toFixed(1)}%
             </li>
           ))}
         </ul>
