@@ -1,6 +1,7 @@
 import { call } from "../auth/ApiService";
 import { unwrapData, unwrapPage } from "../apiResponse";
 import type { PageResponse } from "../commontype";
+import { invalidatePortfolioReport } from "../portfolio/portfolioEvents";
 
 export type MediaType = "LP" | "CD" | "ETC";
 export type CollectionStatus = "OWNED" | "WISHLIST";
@@ -161,7 +162,11 @@ export const createCollection = async (
     "POST",
     toCreateRequestBody(request),
   );
-  return unwrapData<CollectionCreatedResponse>(res);
+  const created = unwrapData<CollectionCreatedResponse>(res);
+
+  if (request.status === "OWNED") invalidatePortfolioReport();
+
+  return created;
 };
 
 /** GET /api/v1/collections/{collectionItemId} */
@@ -192,7 +197,11 @@ export const updateCollection = async (
     "PATCH",
     toUpdateRequestBody(request),
   );
-  return normalizeDetail(unwrapData<CollectionItemDetailRaw>(res));
+  const updated = normalizeDetail(unwrapData<CollectionItemDetailRaw>(res));
+
+  invalidatePortfolioReport();
+
+  return updated;
 };
 
 /** DELETE /api/v1/collections/{collectionItemId} */
@@ -200,6 +209,7 @@ export const deleteCollection = async (
   collectionItemId: number,
 ): Promise<void> => {
   await call(`${COLLECTIONS_BASE}/${collectionItemId}`, "DELETE");
+  invalidatePortfolioReport();
 };
 
 /** DELETE /api/v1/albums/{albumId}/wishlist */

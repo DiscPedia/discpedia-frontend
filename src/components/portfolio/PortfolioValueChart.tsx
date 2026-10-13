@@ -4,20 +4,47 @@ type PortfolioValueChartProps = {
   values: PortfolioValuePoint[];
 };
 
-const formatAxisValue = (value: number) => `₩${Math.round(value / 10_000)}만`;
+const compactCurrency = new Intl.NumberFormat("ko-KR", {
+  notation: "compact",
+  maximumFractionDigits: 1,
+});
+
+const formatAxisValue = (value: number) =>
+  value === 0 ? "₩0" : `₩${compactCurrency.format(value)}`;
+
+const formatMonth = (month: string) => {
+  const match = month.match(/^(\d{4})-(\d{2})$/);
+  return match ? `${Number(match[2])}월` : month;
+};
+
+const formatWon = (value: number) => `₩${value.toLocaleString("ko-KR")}`;
 
 const PortfolioValueChart = ({ values }: PortfolioValueChartProps) => {
+  if (values.length === 0) {
+    return (
+      <section>
+        <h2 className="flex items-center gap-1.5 text-lg font-extrabold text-[#1f2937]">
+          <span aria-hidden="true" className="text-xl font-medium leading-none">〽</span>
+          가치 추이
+        </h2>
+        <div className="mt-3 flex min-h-48 items-center justify-center rounded-[20px] border border-[#e8e9ed] bg-white px-6 text-center text-sm leading-6 text-[#98a1b0] shadow-sm shadow-black/[0.05]">
+          아직 저장된 월별 가치 기록이 없어요.
+        </div>
+      </section>
+    );
+  }
+
   const width = 310;
   const height = 218;
   const plot = { left: 49, right: 286, top: 22, bottom: 178 };
-  const maxValue = Math.max(...values.map((item) => item.value), 1);
+  const maxValue = Math.max(...values.map((item) => item.totalValue), 1);
   const axisMax = Math.ceil(maxValue / 100_000) * 100_000 + 100_000;
   const axisSteps = [axisMax, axisMax * 0.75, axisMax * 0.5, axisMax * 0.25, 0];
   const graphWidth = plot.right - plot.left;
   const graphHeight = plot.bottom - plot.top;
   const points = values.map((item, index) => {
     const x = values.length === 1 ? (plot.left + plot.right) / 2 : plot.left + (graphWidth * index) / (values.length - 1);
-    const y = plot.bottom - (item.value / axisMax) * graphHeight;
+    const y = plot.bottom - (item.totalValue / axisMax) * graphHeight;
     return { ...item, x, y };
   });
   const line = points.map((point) => `${point.x},${point.y}`).join(" ");
@@ -44,11 +71,14 @@ const PortfolioValueChart = ({ values }: PortfolioValueChartProps) => {
               </g>
             );
           })}
-          <polyline fill="none" points={line} stroke="#ff6818" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+          {points.length > 1 && (
+            <polyline fill="none" points={line} stroke="#ff6818" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+          )}
           {points.map((point) => (
             <g key={point.month}>
+              <title>{`${point.month}: ${formatWon(point.totalValue)}`}</title>
               <circle cx={point.x} cy={point.y} r="4" fill="white" stroke="#ff6818" strokeWidth="2.5" />
-              <text x={point.x} y="201" textAnchor="middle" fill="#98a1b0" fontSize="11">{point.label}</text>
+              <text x={point.x} y="201" textAnchor="middle" fill="#98a1b0" fontSize="11">{formatMonth(point.month)}</text>
             </g>
           ))}
         </svg>
