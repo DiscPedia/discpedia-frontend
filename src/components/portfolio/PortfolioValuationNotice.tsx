@@ -30,7 +30,7 @@ const PortfolioValuationNotice = ({
     <p className="mt-1 text-[#927a5b]">
       시세는 매일 23:30(KST)에 갱신됩니다.
       {fallbackCount > 0 &&
-        " 시세가 없는 음반은 구매가와 저장된 판매가 중 큰 금액을 반영합니다."}
+        " 시세가 없는 음반은 구매가와 저장된 판매가(없으면 정가) 중 큰 금액을 반영합니다."}
     </p>
   </aside>
 );

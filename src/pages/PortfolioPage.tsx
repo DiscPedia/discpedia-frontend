@@ -5,6 +5,7 @@ import {
   getPortfolioReport,
   type PortfolioReport,
 } from "../apis/portfolio/portfolio";
+import { PORTFOLIO_REPORT_INVALIDATED_EVENT } from "../apis/portfolio/portfolioEvents";
 import PortfolioDownloadButton from "../components/portfolio/PortfolioDownloadButton";
 import PortfolioGenreChart from "../components/portfolio/PortfolioGenreChart";
 import PortfolioHeader from "../components/portfolio/PortfolioHeader";
@@ -20,6 +21,24 @@ const PortfolioPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [requestVersion, setRequestVersion] = useState(0);
+
+  useEffect(() => {
+    const refreshReport = () => {
+      setRequestVersion((version) => version + 1);
+    };
+
+    window.addEventListener(
+      PORTFOLIO_REPORT_INVALIDATED_EVENT,
+      refreshReport,
+    );
+
+    return () => {
+      window.removeEventListener(
+        PORTFOLIO_REPORT_INVALIDATED_EVENT,
+        refreshReport,
+      );
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
