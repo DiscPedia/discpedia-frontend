@@ -1,6 +1,6 @@
 import displayIcon from "../assets/display.svg";
-import kakaoIcon from "../assets/kakaoBanner.svg";
-import googleIcon from "../assets/googleBanner.svg";
+import kakaoIcon from "../assets/kakao-symbol.svg";
+import googleIcon from "../assets/google-g.svg";
 import { startOAuthLogin } from "../apis/auth/auth";
 
 const LoginPage = () => {
@@ -28,7 +28,7 @@ const LoginPage = () => {
           <img
             src={kakaoIcon}
             alt="카카오로 시작하기"
-            className="h-[12px] w-[12px] max-w-[250px]"
+            className="h-[18px] w-[18px]"
           />
           <p>카카오로 시작하기</p>
         </button>
@@ -40,7 +40,7 @@ const LoginPage = () => {
           <img
             src={googleIcon}
             alt="구글로 시작하기"
-            className="h-[12px] w-[12px] max-w-[250px]"
+            className="h-[18px] w-[18px]"
           />
           <p>구글로 시작하기</p>
         </button>
