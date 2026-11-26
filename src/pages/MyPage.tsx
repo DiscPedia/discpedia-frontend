@@ -151,6 +151,7 @@ const MyPage = () => {
       {/* 메뉴 */}
       <nav className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm shadow-gray-200/50">
         {[
+          { title: "콘서트 관람 기록", path: "/concert-records" },
           { title: "내 리뷰 모아보기", path: "/myReview" },
           { title: "관심 아티스트 관리", path: "/recommand" },
           { title: "포트폴리오 변동 내역", path: "/portfolio" },
