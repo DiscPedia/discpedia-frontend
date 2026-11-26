@@ -17,3 +17,5 @@
 .concert-primary { min-height: 48px; border-radius: 10px; background: #111827; color: white; font-size: 15px; font-weight: 700; text-align: center; }
 .concert-primary:disabled { opacity: .5; cursor: not-allowed; }
 .concert-error { color: #b42318; font-size: 13px; }
+.concert-action-footer { flex: none; padding: 4px 16px; background: white; }
+.concert-action-footer .concert-primary { width: 100%; }
