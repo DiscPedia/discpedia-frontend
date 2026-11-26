@@ -27,6 +27,7 @@ import ConcertTimelinePage from "./pages/concert/ConcertTimelinePage";
 import ConcertFormPage from "./pages/concert/ConcertFormPage";
 import ConcertDetailPage from "./pages/concert/ConcertDetailPage";
 import ConcertReviewPage from "./pages/concert/ConcertReviewPage";
+import ConcertSetlistPage from "./pages/concert/ConcertSetlistPage";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,7 @@ const router = createBrowserRouter([
       { path: "/concert-records/new", element: <ConcertFormPage /> },
       { path: "/concert-records/:id", element: <ConcertDetailPage /> },
       { path: "/concert-records/:id/review", element: <ConcertReviewPage /> },
+      { path: "/concert-records/:id/setlist", element: <ConcertSetlistPage /> },
       { path: "/concert-records/:id/edit", element: <ConcertFormPage /> },
       {
         path: "/portfolio",
