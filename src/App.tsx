@@ -26,6 +26,7 @@ import AiChatPage from "./pages/AiChatPage";
 import ConcertTimelinePage from "./pages/concert/ConcertTimelinePage";
 import ConcertFormPage from "./pages/concert/ConcertFormPage";
 import ConcertDetailPage from "./pages/concert/ConcertDetailPage";
+import ConcertReviewPage from "./pages/concert/ConcertReviewPage";
 
 const router = createBrowserRouter([
   {
@@ -50,6 +51,7 @@ const router = createBrowserRouter([
       { path: "/concert-records", element: <ConcertTimelinePage /> },
       { path: "/concert-records/new", element: <ConcertFormPage /> },
       { path: "/concert-records/:id", element: <ConcertDetailPage /> },
+      { path: "/concert-records/:id/review", element: <ConcertReviewPage /> },
       { path: "/concert-records/:id/edit", element: <ConcertFormPage /> },
       {
         path: "/portfolio",
