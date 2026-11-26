@@ -1,0 +1,13 @@
+.concert-review-form { display: flex; flex-direction: column; }
+.concert-review-summary { display: flex; flex-direction: column; gap: 3px; padding: 16px; }
+.concert-review-summary strong { font-size: 16px; font-weight: 700; }
+.concert-review-summary span { color: #667085; font-size: 12px; }
+.concert-review-form h2 { margin-top: 16px; font-size: 16px; font-weight: 700; }
+.concert-review-stars { display: flex; justify-content: center; gap: 6px; margin: 12px 0 0; }
+.concert-review-stars button { padding: 0 3px; color: #d0d5dd; font-size: 42px; line-height: 1.4; }
+.concert-review-stars button.selected { color: #111827; }
+.concert-review-score { margin: 4px 0 16px; font-size: 13px; font-weight: 600; }
+.concert-review-form label { margin-bottom: 14px; font-size: 14px; font-weight: 700; }
+.concert-review-form textarea { height: 149px; padding: 16px; resize: vertical; border: 0; border-radius: 10px; background: white; color: #111827; font-size: 14px; line-height: 1.6; }
+.concert-review-form textarea::placeholder { color: #98a2b3; }
+.concert-review-form .concert-hint { margin-top: 16px; }
