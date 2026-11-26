@@ -1,0 +1,17 @@
+.concert-list-heading { display: flex; justify-content: space-between; align-items: center; margin: 0 0 14px; }
+.concert-list-heading h2 { font-size: 20px; font-weight: 700; }
+.concert-list-heading span { color: #667085; font-size: 12px; }
+.concert-list-section { margin-bottom: 14px; }
+.concert-list-section h3 { margin: 0 0 14px; font-size: 14px; font-weight: 700; }
+.concert-list-card { display: flex; align-items: center; width: 100%; min-height: 132px; padding: 12px; gap: 12px; margin-bottom: 12px; text-align: left; }
+.concert-list-card .concert-poster { flex: none; width: 74px; height: 108px; }
+.concert-poster-empty { display: grid; place-items: center; color: #98a2b3; font-size: 12px; }
+.concert-list-copy { display: flex; flex-direction: column; min-width: 0; gap: 3px; }
+.concert-list-copy strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 17px; line-height: 1.45; }
+.concert-list-date, .concert-list-status { font-size: 12px; font-weight: 600; }
+.concert-list-date.planned, .concert-list-status.planned { color: #f05a28; }
+.concert-list-date.attended, .concert-list-status.attended { color: #009367; }
+.concert-list-meta { overflow: hidden; color: #667085; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.concert-list-note { margin-top: 16px; padding: 15px 16px; border-radius: 12px; background: #fff1e9; color: #667085; font-size: 12px; }
+.concert-list-more { display: block; margin: 16px auto; color: #344054; font-size: 13px; font-weight: 600; }
+.concert-empty { padding: 24px 16px; color: #667085; font-size: 14px; }
