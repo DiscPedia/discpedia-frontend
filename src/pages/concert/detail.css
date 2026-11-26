@@ -11,3 +11,15 @@
 .concert-detail-seat span { color: #667085; font-size: 12px; }
 .concert-detail-seat strong { font-size: 15px; font-weight: 600; }
 .concert-detail-note { margin-top: 16px; padding: 16px; border-radius: 12px; background: #fff1e9; color: #667085; font-size: 12px; }
+.concert-detail-hero.attended .concert-detail-copy { gap: 6px; }
+.concert-attended-date { color: #009367; font-size: 12px; font-weight: 700; }
+.concert-detail-panel { margin-top: 16px; padding: 16px; }
+.concert-panel-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.concert-panel-heading h3 { font-size: 16px; font-weight: 700; }
+.concert-panel-heading button { font-size: 12px; font-weight: 600; }
+.concert-rating { color: #111827; font-size: 26px; line-height: 1.4; letter-spacing: 1px; }
+.concert-rating span { color: #d0d5dd; }
+.concert-review-content { margin-top: 4px; color: #475467; font-size: 13px; line-height: 1.6; white-space: pre-wrap; }
+.concert-setlist-preview { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; font-size: 13px; }
+.concert-setlist-preview li { display: flex; gap: 8px; }
+.concert-setlist-preview li span { color: #667085; }
