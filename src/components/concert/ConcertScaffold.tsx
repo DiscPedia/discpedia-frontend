@@ -7,10 +7,11 @@ type Props = {
   children: ReactNode;
   action?: { label: string; onClick: () => void };
   footer?: "navigation" | "private" | "none";
+  bottomAction?: ReactNode;
   onBack?: () => void;
 };
 
-export function ConcertScaffold({ title, children, action, footer = "none", onBack }: Props) {
+export function ConcertScaffold({ title, children, action, footer = "none", bottomAction, onBack }: Props) {
   const navigate = useNavigate();
 
   return (
@@ -24,6 +25,7 @@ export function ConcertScaffold({ title, children, action, footer = "none", onBa
         {action ? <button type="button" onClick={action.onClick}>{action.label}</button> : <span />}
       </header>
       <main className="concert-main">{children}</main>
+      {bottomAction && <div className="concert-action-footer">{bottomAction}</div>}
       {footer === "navigation" && (
         <nav className="concert-nav" aria-label="하단 탐색">
           <button type="button" onClick={() => navigate("/home")}>홈</button>

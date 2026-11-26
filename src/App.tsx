@@ -24,6 +24,7 @@ import EditReviewPage from "./pages/EditReviewPage";
 import WriteReviewPage from "./pages/WriteReviewPage";
 import AiChatPage from "./pages/AiChatPage";
 import ConcertTimelinePage from "./pages/concert/ConcertTimelinePage";
+import ConcertFormPage from "./pages/concert/ConcertFormPage";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,8 @@ const router = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       { path: "/concert-records", element: <ConcertTimelinePage /> },
+      { path: "/concert-records/new", element: <ConcertFormPage /> },
+      { path: "/concert-records/:id/edit", element: <ConcertFormPage /> },
       {
         path: "/portfolio",
         element: <PortfolioPage />,
