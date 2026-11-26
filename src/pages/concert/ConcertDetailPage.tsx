@@ -33,8 +33,8 @@ export default function ConcertDetailPage() {
     if (!record) return;
     try {
       setSaving(true);
-      await updateConcertRecord(record.concertRecordId, { attendanceStatus: "ATTENDED" });
-      navigate("/concert-records", { replace: true });
+      const updated = await updateConcertRecord(record.concertRecordId, { attendanceStatus: "ATTENDED" });
+      setRecord(updated);
     } catch {
       setError("관람 상태를 변경하지 못했습니다.");
     } finally {
@@ -49,7 +49,7 @@ export default function ConcertDetailPage() {
       footer={record?.attendanceStatus === "ATTENDED" ? "private" : "none"}>
       {loading && <p className="concert-hint">기록을 불러오는 중...</p>}
       {error && <p className="concert-error" role="alert">{error}</p>}
-      {record && <>
+      {record?.attendanceStatus === "PLANNED" && <>
         <section className="concert-detail-hero concert-card">
           {record.posterImageUrl ? <img className="concert-poster" src={record.posterImageUrl} alt={`${record.concertName} 포스터`} /> : <div className="concert-poster concert-poster-empty">포스터</div>}
           <div className="concert-detail-copy">
@@ -61,7 +61,26 @@ export default function ConcertDetailPage() {
           </div>
         </section>
         {record.seat && <section className="concert-detail-seat concert-card"><span>좌석</span><strong>{record.seat}</strong></section>}
-        {record.attendanceStatus === "PLANNED" && <p className="concert-detail-note">공연이 끝나면 직접 관람 완료로 변경해 주세요.</p>}
+        <p className="concert-detail-note">공연이 끝나면 직접 관람 완료로 변경해 주세요.</p>
+      </>}
+      {record?.attendanceStatus === "ATTENDED" && <>
+        <section className="concert-detail-hero attended concert-card">
+          {record.posterImageUrl ? <img className="concert-poster" src={record.posterImageUrl} alt={`${record.concertName} 포스터`} /> : <div className="concert-poster concert-poster-empty">포스터</div>}
+          <div className="concert-detail-copy">
+            <span className="concert-attended-date">다녀옴 · {concertDateLabel(record.concertDate)}</span>
+            <h2>{record.concertName}</h2>
+            <p>{record.artist.name} · {record.venue}</p>
+            <p>{[record.sessionLabel, record.seat].filter(Boolean).join(" · ")}</p>
+          </div>
+        </section>
+        <section className="concert-detail-panel concert-card">
+          <div className="concert-panel-heading"><h3>관람 후기</h3><button type="button" onClick={() => navigate(`/concert-records/${recordId}/review`)}>{record.review ? "수정" : "작성"}</button></div>
+          {record.review ? <><p className="concert-rating" aria-label={`별점 ${record.review.rating}점`}>{"★".repeat(record.review.rating)}<span>{"★".repeat(5 - record.review.rating)}</span></p><p className="concert-review-content">{record.review.content}</p></> : <p className="concert-hint">이 공연의 후기를 남겨 보세요.</p>}
+        </section>
+        <section className="concert-detail-panel concert-card">
+          <div className="concert-panel-heading"><h3>셋리스트</h3><button type="button" onClick={() => navigate(`/concert-records/${recordId}/setlist`)}>{record.setlist.length ? "수정" : "작성"}</button></div>
+          {record.setlist.length ? <ol className="concert-setlist-preview">{record.setlist.map((track) => <li key={track.order}><span>{String(track.order).padStart(2, "0")}</span>{track.title}</li>)}</ol> : <p className="concert-hint">기억나는 연주곡을 기록해 보세요.</p>}
+        </section>
       </>}
     </ConcertScaffold>
   );
